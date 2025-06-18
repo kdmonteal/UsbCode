@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gestión de Perfil de Egreso</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    h1 {
+      color: #ff9900;
+    }
+
+    .form-container {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      padding: 2rem;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      width: 90vw;
+      display: none;
+      z-index: 1000;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+      display: none;
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #333;
+    }
+
+    select, textarea, button, input[type="text"] {
+      width: 100%;
+      padding: 0.7rem;
+      margin-top: 0.5rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #ff9900;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+      border-radius: 20px;
+      padding: 0.75rem 1.5rem;
+      margin: 0.5rem 0.5rem 1rem 0;
+      width: 15%;
+    }
+
+    button:hover {
+      background-color: #e68500;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+      /* border-radius: 20px; */
+      overflow: hidden;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 0.75rem;
+      text-align: left;
+    }
+
+    th {
+      /* background-color: #ff9900; */
+      color: #000;
+      cursor: pointer;
+    }
+
+    .search-bar {
+      margin: 1rem 0;
+    }
+
+    input[type="text"]#searchInput {
+      padding: 0.6rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      width: 99%;
+    }
+
+    .botones-centrados {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+    }
+  </style>
+</head>
+<body>
+    <div class="botones-centrados">
+        <button onclick="mostrarFormulario()">Agregar Perfil</button>
+        <button onclick="descargarPDF()">Descargar PDF</button>
+        <button onclick="descargarExcel()">Descargar Excel</button>
+    </div>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Buscar en la tabla..." onkeyup="filtrarTabla()" />
+  </div>
+
+  <table id="tabla-perfiles">
+    <thead>
+        <tr>
+            <th onclick="ordenarTabla(0)">Carrera <span id="icon-0">⇅</span></th>
+            <th onclick="ordenarTabla(1)">Plan <span id="icon-1">⇅</span></th>
+            <th onclick="ordenarTabla(2)">Perfil <span id="icon-2">⇅</span></th>
+            <th>Acción</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <div class="overlay" id="overlay" onclick="cerrarFormulario()"></div>
+
+  <div class="form-container" id="formulario">
+    <label for="carrera">Carrera:</label>
+    <select id="carrera" onchange="loadPlanes()">
+      <option value="">Seleccione una carrera</option>
+      <option value="Ingeniería Multimedia">Ingeniería Multimedia</option>
+      <option value="Diseño Visual">Diseño Visual</option>
+    </select>
+
+    <label for="plan">Plan académico:</label>
+    <select id="plan">
+      <option value="">Seleccione un plan académico</option>
+    </select>
+
+    <label for="perfil">Perfil de egreso:</label>
+    <textarea id="perfil" rows="5" placeholder="Describa el perfil de egreso..."></textarea>
+
+    <button onclick="guardarPerfil()">Guardar</button>
+    <button onclick="cerrarFormulario()">Cancelar</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script>
+    const planes = {
+      "Ingeniería Multimedia": ["Pensum 2015-2", "Pensum 2023-1"],
+      "Diseño Visual": ["Pensum 2016-1", "Pensum 2022-2"]
+    };
+
+    const perfiles = [];
+
+    function mostrarFormulario() {
+      document.getElementById('formulario').style.display = 'block';
+      document.getElementById('overlay').style.display = 'block';
+    }
+
+    function cerrarFormulario() {
+      document.getElementById('formulario').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('perfil').value = '';
+    }
+
+    function loadPlanes() {
+      const carrera = document.getElementById('carrera').value;
+      const planSelect = document.getElementById('plan');
+      planSelect.innerHTML = '<option value="">Seleccione un plan académico</option>';
+      if (planes[carrera]) {
+        planes[carrera].forEach(plan => {
+          const opt = document.createElement('option');
+          opt.value = plan;
+          opt.textContent = plan;
+          planSelect.appendChild(opt);
+        });
+      }
+    }
+
+    function guardarPerfil() {
+      const carrera = document.getElementById('carrera').value;
+      const plan = document.getElementById('plan').value;
+      const perfil = document.getElementById('perfil').value;
+      if (!carrera || !plan || !perfil) {
+        alert('Debe completar todos los campos.');
+        return;
+      }
+      perfiles.push({ carrera, plan, perfil });
+      renderTabla();
+      cerrarFormulario();
+    }
+
+    function renderTabla() {
+      const tbody = document.getElementById('tabla-perfiles').querySelector('tbody');
+      tbody.innerHTML = '';
+      perfiles.forEach((item, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${item.carrera}</td>
+          <td>${item.plan}</td>
+          <td>${item.perfil}</td>
+          <td><button style="width: 100% !important;" onclick="editarPerfil(${index})">Editar</button></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function editarPerfil(index) {
+      const item = perfiles[index];
+      document.getElementById('carrera').value = item.carrera;
+      loadPlanes();
+      setTimeout(() => {
+        document.getElementById('plan').value = item.plan;
+        document.getElementById('perfil').value = item.perfil;
+        perfiles.splice(index, 1);
+        renderTabla();
+        mostrarFormulario();
+      }, 100);
+    }
+
+    function filtrarTabla() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const filas = document.querySelectorAll('#tabla-perfiles tbody tr');
+      filas.forEach(fila => {
+        const texto = fila.textContent.toLowerCase();
+        fila.style.display = texto.includes(input) ? '' : 'none';
+      });
+    }
+
+    function ordenarTabla(colIndex) {
+        const table = document.getElementById('tabla-perfiles');
+        let switching = true;
+        let shouldSwitch, i;
+        let dir = "asc";
+        let switchCount = 0;
+
+        // Limpiar íconos de todas las columnas
+        for (let j = 0; j <= 2; j++) {
+            document.getElementById(`icon-${j}`).textContent = "⇅";
+        }
+
+        // Mostrar ícono actual
+        document.getElementById(`icon-${colIndex}`).textContent = dir === "asc" ? "▲" : "▼";
+
+        while (switching) {
+            switching = false;
+            const rows = table.rows;
+            for (i = 1; i < rows.length - 1; i++) {
+            shouldSwitch = false;
+            let x = rows[i].getElementsByTagName("TD")[colIndex];
+            let y = rows[i + 1].getElementsByTagName("TD")[colIndex];
+
+            if (dir === "asc" && x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                shouldSwitch = true;
+                break;
+            }
+            if (dir === "desc" && x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                shouldSwitch = true;
+                break;
+            }
+            }
+            if (shouldSwitch) {
+            rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+            switching = true;
+            switchCount++;
+            } else {
+            if (switchCount === 0 && dir === "asc") {
+                dir = "desc";
+                // Cambiar ícono nuevamente
+                document.getElementById(`icon-${colIndex}`).textContent = "▼";
+                switching = true;
+            }
+            }
+        }
+        }
+
+    async function descargarPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(12);
+      perfiles.forEach((item, i) => {
+        doc.text(`Carrera: ${item.carrera}`, 10, 10 + (i * 30));
+        doc.text(`Plan: ${item.plan}`, 10, 20 + (i * 30));
+        doc.text(`Perfil: ${item.perfil}`, 10, 30 + (i * 30));
+      });
+      doc.save("perfiles_de_egreso.pdf");
+    }
+
+    function descargarExcel() {
+      const wb = XLSX.utils.book_new();
+      const ws_data = [["Carrera", "Plan", "Perfil"]];
+      perfiles.forEach(p => ws_data.push([p.carrera, p.plan, p.perfil]));
+      const ws = XLSX.utils.aoa_to_sheet(ws_data);
+      XLSX.utils.book_append_sheet(wb, ws, "Perfiles");
+      XLSX.writeFile(wb, "perfiles_de_egreso.xlsx");
+    }
+  </script>
+</body>
+</html>
