@@ -1,0 +1,25 @@
+{
+  "curso": "Computación Gráfica",
+  "estudiantes": [
+    {
+      "nombre": "Laura Gómez",
+      "nota": 4.7
+    },
+    {
+      "nombre": "Mateo Rodríguez",
+      "nota": 3.9
+    },
+    {
+      "nombre": "Isabella Torres",
+      "nota": 4.3
+    },
+    {
+      "nombre": "Santiago Ramírez",
+      "nota": 2.8
+    },
+    {
+      "nombre": "Valentina Pérez",
+      "nota": 4.0
+    }
+  ]
+}
