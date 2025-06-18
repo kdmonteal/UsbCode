@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Relación Materias - Competencias y Resultados</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      padding: 2rem;
+    }
+    h1 {
+      color: #ff9900;
+    }
+    .filtros {
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+    select {
+      padding: 0.5rem;
+      margin-right: 1rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.75rem;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background-color: #ff9900;
+      color: #fff;
+    }
+    button {
+      background-color: #ff9900;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
+    .mensaje {
+      font-size: 1.2rem;
+      color: #888;
+      margin-top: 2rem;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="filtros">
+    <label for="carrera">Carrera:</label>
+    <select id="carrera" onchange="actualizarVista()">
+      <option value="">Seleccione una carrera</option>
+      <option value="Ingeniería Multimedia">Ingeniería Multimedia</option>
+    </select>
+    <label for="pensum">Pensum:</label>
+    <select id="pensum" onchange="actualizarVista()">
+      <option value="">Seleccione un pensum</option>
+      <option value="Pensum 2023-1">Pensum 2023-1</option>
+    </select>
+  </div>
+  <div id="contenido">
+    <p class="mensaje">No hay información disponible para mostrar.</p>
+  </div>
+
+  <script>
+    const materiasPorSemestre = {"Semestre 1": [{"nombre": "Prec\u00e1lculo", "creditos": 3}, {"nombre": "Matem\u00e1ticas Discretas", "creditos": 3}, {"nombre": "Fundamentos de Programaci\u00f3n", "creditos": 3}, {"nombre": "Introducci\u00f3n a la Ingenier\u00eda", "creditos": 2}, {"nombre": "Comunicaci\u00f3n Oral y Escrita I", "creditos": 2}, {"nombre": "Human\u00edstica I", "creditos": 1}, {"nombre": "Ingl\u00e9s I", "creditos": 2}], "Semestre 2": [{"nombre": "F\u00edsica Mec\u00e1nica", "creditos": 4}, {"nombre": "C\u00e1lculo I", "creditos": 4}, {"nombre": "Programaci\u00f3n Orientada a Objetos", "creditos": 3}, {"nombre": "Taller Multimedia", "creditos": 2}, {"nombre": "Human\u00edstica III", "creditos": 2}, {"nombre": "Bienestar Institucional I", "creditos": 1}, {"nombre": "Ingl\u00e9s II", "creditos": 2}], "Semestre 3": [{"nombre": "C\u00e1lculo II", "creditos": 4}, {"nombre": "\u00c1lgebra Lineal", "creditos": 3}, {"nombre": "Dise\u00f1o de Medios Digitales", "creditos": 3}, {"nombre": "Guion para Medios Digitales", "creditos": 2}, {"nombre": "Human\u00edstica IV", "creditos": 2}, {"nombre": "Bienestar Institucional II", "creditos": 1}, {"nombre": "Ingl\u00e9s III", "creditos": 2}], "Semestre 4": [{"nombre": "Matem\u00e1ticas Especiales", "creditos": 4}, {"nombre": "Probabilidad y Estad\u00edstica", "creditos": 3}, {"nombre": "Computaci\u00f3n Gr\u00e1fica", "creditos": 3}, {"nombre": "Dibujo para Multimedia", "creditos": 2}, {"nombre": "Taller de Video y Fotograf\u00eda", "creditos": 2}, {"nombre": "Comunicaci\u00f3n Oral y Escrita II", "creditos": 2}, {"nombre": "Human\u00edstica V", "creditos": 1}, {"nombre": "Bienestar Institucional III", "creditos": 1}, {"nombre": "Ingl\u00e9s IV", "creditos": 2}], "Semestre 5": [{"nombre": "Base de Datos", "creditos": 4}, {"nombre": "Taller de Animaci\u00f3n 2D", "creditos": 2}, {"nombre": "Fundamentos de Redes", "creditos": 3}, {"nombre": "Audio Digital", "creditos": 2}, {"nombre": "Electiva en Ingenier\u00eda I", "creditos": 2}, {"nombre": "Human\u00edstica VI", "creditos": 2}, {"nombre": "Ingl\u00e9s V", "creditos": 2}], "Semestre 6": [{"nombre": "Desarrollo Web", "creditos": 3}, {"nombre": "Modelado 3D", "creditos": 3}, {"nombre": "Circuitos Digitales", "creditos": 3}, {"nombre": "Procesamiento Digital de Se\u00f1ales", "creditos": 2}, {"nombre": "Electiva en Ingenier\u00eda II", "creditos": 2}, {"nombre": "Gesti\u00f3n en Proyectos", "creditos": 2}, {"nombre": "Ingl\u00e9s VI", "creditos": 2}], "Semestre 7": [{"nombre": "Animaci\u00f3n e Integraci\u00f3n 3D", "creditos": 3}, {"nombre": "Electr\u00f3nica para Multimedia", "creditos": 3}, {"nombre": "Procesamiento de Im\u00e1genes", "creditos": 3}, {"nombre": "Edici\u00f3n y Post-producci\u00f3n de Video", "creditos": 2}, {"nombre": "Proyecto en Ingenier\u00eda", "creditos": 4}, {"nombre": "Ingl\u00e9s VII", "creditos": 2}], "Semestre 8": [{"nombre": "Dise\u00f1o de Experiencias Interactivas", "creditos": 3}, {"nombre": "Electiva en Ingenier\u00eda III", "creditos": 2}, {"nombre": "Legislaci\u00f3n para Contenidos Digitales", "creditos": 2}, {"nombre": "Pr\u00e1ctica Profesional", "creditos": 6}, {"nombre": "Ingl\u00e9s VIII", "creditos": 2}]};
+
+    function actualizarVista() {
+      const carrera = document.getElementById("carrera").value;
+      const pensum = document.getElementById("pensum").value;
+      const cont = document.getElementById("contenido");
+      const relaciones = JSON.parse(localStorage.getItem("relaciones") || "{}");
+
+      if (carrera === "Ingeniería Multimedia" && pensum === "Pensum 2023-1") {
+        let html = "";
+        for (const semestre in materiasPorSemestre) {
+          html += "<h2>" + semestre + "</h2>";
+          html += `<table>
+            <thead>
+              <tr>
+                <th>Materia</th>
+                <th>Créditos</th>
+                <th>Competencias Asociadas</th>
+                <th>Resultados Asociados</th>
+                <th>Asignar</th>
+              </tr>
+            </thead>
+            <tbody>`;
+          materiasPorSemestre[semestre].forEach(materia => {
+            const id = materia.nombre.replace(/ /g, "_");
+            const relacion = relaciones[id] || {};
+            const compList = (relacion.competencias || []).join(", ") || "—";
+            const resList = (relacion.resultados || []).map(r => `<li style='margin-left:1rem;'>• ${r}</li>`).join("") || "—";
+
+            html += `
+              <tr>
+                <td>${materia.nombre}</td>
+                <td>${materia.creditos}</td>
+                <td id="comp-${id}">${compList}</td>
+                <td id="res-${id}"><ul>${resList}</ul></td>
+                <td><button onclick="asociar('${id}')">Asignar</button></td>
+              </tr>`;
+          });
+          html += "</tbody></table>";
+        }
+        cont.innerHTML = html;
+      } else {
+        cont.innerHTML = '<p class="mensaje">No hay información disponible para mostrar.</p>';
+      }
+    }
+
+    function asociar(id) {
+      const competencias = JSON.parse(localStorage.getItem("competencias")) || [];
+      const resultados = JSON.parse(localStorage.getItem("resultados")) || [];
+
+      const popup = window.open("", "popup", "width=600,height=600");
+      let html = "<h3>Asignar Competencias y Resultados</h3><p><strong>Competencias:</strong></p>";
+      competencias.forEach((c) => {
+        if (c.carrera === "Ingeniería Multimedia" && c.pensum === "Pensum 2023-1") {
+          html += `<label><input type='checkbox' class='comp' value='${c.nombre}'> ${c.nombre}</label><br>`;
+        }
+      });
+      html += "<hr><p><strong>Resultados:</strong></p>";
+      resultados.forEach((r) => {
+        if (r.carrera === "Ingeniería Multimedia" && r.pensum === "Pensum 2023-1") {
+          html += `<label><input type='checkbox' class='res' value='${r.desc}'> ${r.desc}</label><br>`;
+        }
+      });
+      html += `<br><button onclick="window.opener.guardar('${id}')">Guardar</button>`;
+      popup.document.write("<html><body style='font-family:Arial;padding:20px;'>" + html + "</body></html>");
+      popup.document.close();
+    }
+
+    function guardar(id) {
+      const comps = Array.from(document.querySelectorAll(".comp"))
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+      const ress = Array.from(document.querySelectorAll(".res"))
+        .filter(cb => cb.checked)
+        .map(cb => cb.value);
+
+      // Guardar en localStorage
+      const relaciones = JSON.parse(localStorage.getItem("relaciones") || "{}");
+      if (!relaciones[id]) relaciones[id] = {};
+      relaciones[id].competencias = comps;
+      relaciones[id].resultados = ress;
+      localStorage.setItem("relaciones", JSON.stringify(relaciones));
+
+      // Actualizar tabla en la ventana principal
+      const compCelda = window.opener.document.getElementById("comp-" + id);
+      const resCelda = window.opener.document.getElementById("res-" + id);
+
+      compCelda.textContent = comps.length ? comps.join(", ") : "—";
+
+      if (ress.length) {
+        resCelda.innerHTML = "<ul>" + ress.map(r => "<li style='margin-left:1rem;'>• " + r + "</li>").join("") + "</ul>";
+      } else {
+        resCelda.textContent = "—";
+      }
+
+      window.close();
+    }
+
+  </script>
+</body>
+</html>
