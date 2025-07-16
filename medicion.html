@@ -1,86 +1,89 @@
-
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Evaluación del Curso y Competencias</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #ffffff;
-      padding: 2rem;
-    }
-    h3 {
-      text-align: center;
-    }
-    .filtros {
-      margin-bottom: 2rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      text-align: center;
-    }
-     .seccion {
-      margin-bottom: 2rem;
-     }
-    select {
-      padding: 0.5rem;
-      margin-right: 1rem;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 0.75rem;
-      text-align: left;
-    }
-    th {
-      /* background-color: #ff9900; */
-      color: #000;
-    }
-    
-    .competencia-grafico {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-    }
-    .competencia-info {
-      flex: 1;
-      padding-right: 2rem;
-      min-width: 300px;
-    }
-    .grafico {
-      flex: 1;
-      height: 300px;
-      text-align: center;
-    }
-    canvas#chartAprobacion {
-      max-width: 100%;
-    }
 
-    input[type="file"] {
-      margin-top: 0.5rem;
-    }
-  </style>
+<head>
+    <meta charset="UTF-8">
+    <title>Evaluación por Competencia</title>
+    <style>
+       body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            padding: 2rem;
+        }
+        h3 {
+            text-align: center;
+        }
+
+        .filtros {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        select {
+            padding: 0.5rem;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .seccion-ra {
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 0.75rem;
+            text-align: center;
+        }
+
+        th {
+            background-color: #ff9900;
+            color: white;
+        }
+
+        .grafico-mini {
+            width: 100px;
+            height: 100px;
+            margin: auto;
+        }
+
+        .grafico-general {
+            flex: 1;
+            height: 300px;
+            text-align: center;
+        }
+        
+    </style>
 </head>
+
 <body>
-  <div class="filtros">
-    <label>Carrera:
+    <div class="filtros">
+         <label>Carrera:
       <select>
         <option>Ingeniería Multimedia</option>
       </select>
     </label>
-    <label>Pensum:
+    <label>Plan:
       <select>
-        <option>Pensum 2023-1</option>
+        <option>2023-1</option>
+      </select>
+    </label>
+    <label>Ciclo:
+      <select>
+        <option>2024 - 2</option>
+        <option>2025 - 1</option>
       </select>
     </label>
     <label>Materia:
@@ -88,105 +91,130 @@
         <option>Computación Gráfica</option>
       </select>
     </label>
-  </div>
+    </div>
 
-  <h3>Evaluación del Curso: Computación Gráfica</h3>
+    <div class="seccion competencia-grafico">
+       <div style="display: flex; flex-wrap: wrap; gap: 2rem; justify-content: center; align-items: flex-start; margin-bottom: 2rem;">
+        <div style="flex: 2; min-width: 300px;">
+            <h2>Competencia Asociada</h2>
+            <p>Diseña soluciones visuales interactivas mediante herramientas gráficas, modelado y animación 3D.</p>
+            <p><strong>Resultados de Aprendizaje</strong></p>
+            <ul>
+            <li>RA1: Aplica conceptos de modelado 3D en herramientas como Blender.</li>
+            <li>RA2: Integra elementos visuales en entornos de desarrollo como Unity o Three.js.</li>
+            </ul>
+            <p><strong>Resultado Competencia</strong></p>
+            <p> <i>No se alcanza la competencia</i>. Solo el 50% de los RA fueron aprobados.</p>
+        </div>
 
+        <div class="grafico-general">
+            <canvas id="chartCompetencia"></canvas>
+        </div>
+        </div>
 
-  <div class="seccion competencia-grafico">
-  <div class="competencia-info">
-    <h2>Competencia Asociada</h2>
-    <p><strong>Diseña soluciones visuales interactivas mediante herramientas gráficas, modelado y animación 3D.</strong></p>
-    <p><strong>Resultados de Aprendizaje</strong></p>
-    <ul>
-      <li>Aplica conceptos de modelado 3D en herramientas como Blender.</li>
-      <li>Integra elementos visuales en entornos de desarrollo como Unity o Three.js.</li>
-      <li>Desarrolla piezas visuales aplicando principios de diseño computacional.</li>
-    </ul>
-  </div>
+        <div class="seccion-ra">
+            <h3>Resultado de Aprendizaje: RA1</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Curso</th>
+                        <th>Estudiantes</th>
+                        <th>Aprobaron</th>
+                        <th>No Aprobaron</th>
 
-  <div class="grafico"><canvas id="chartAprobacion"></canvas></div>
-</div>
-  </div>
+                        <th>Estado</th>
+                        <th>Descargar</th>
+                        <th>Resultado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Computación Gráfica</td>
+                        <td>20</td>
+                        <td>18</td>
+                        <td>2</td>
 
-   <div class="seccion">
-    <h2>Estudiantes</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Nota Final</th>
-          <th>Estado de Competencia</th>
-        </tr>
-      </thead>
-      <tbody>
-        
-    <tr>
-        <td>Laura Gómez</td>
-        <td>4.7</td>
-        <td>Aprobado</td>
-    </tr>
-    
-    <tr>
-        <td>Mateo Rodríguez</td>
-        <td>3.9</td>
-        <td>Aprobado</td>
-    </tr>
-    
-    <tr>
-        <td>Isabella Torres</td>
-        <td>4.3</td>
-        <td>Aprobado</td>
-    </tr>
-    
-    <tr>
-        <td>Santiago Ramírez</td>
-        <td>2.8</td>
-        <td>No Aprobado</td>
-    </tr>
-    
-    <tr>
-        <td>Valentina Pérez</td>
-        <td>4.0</td>
-        <td>Aprobado</td>
-    </tr>
-    
-      </tbody>
-    </table>
-</div>
-  <div class="seccion">
-    <h2>Cargar Evidencias</h2><p>Adjunta archivos que evidencien el trabajo del curso (ej. informes, proyectos, capturas).</p>
-    <input type="file" accept=".pdf,.zip">
-  </div>
+                        <td><span style="background-color: #4CAF50; color: white; padding: 4px 10px; border-radius: 12px; display: inline-block; font-weight: bold;"> Aprobado (90%)</span></td>
+                        <td><a href="#"> Evidencia(📎)</a> <br> <a href="#"> Plan de Mejora (📄)</a></td>
 
-  <div class="seccion">
-    <h2>Plan de Mejora</h2><p>Sube un documento que describa las acciones a implementar para mejorar el desempeño del curso en futuras ediciones.</p>
-    <input type="file" accept=".pdf,.docx">
-  </div>
+                        <td><canvas class="grafico-mini" id="chartRA1"></canvas></td>
+                    </tr>
+                    <tr>
+                        <td>Diseño Interactivo</td>
+                        <td>10</td>
+                        <td>2</td>
+                        <td>8</td>
+                        <td><span style="background-color: #f44336; color: white; padding: 4px 10px; border-radius: 12px; display: inline-block; font-weight: bold;">No aprobado (80%)</span></td>
+                        <td><a href="#"> Evidencia(📎)</a> <br> <a href="#"> Plan de Mejora (📄)</a></td>
+                        <td><canvas class="grafico-mini" id="chartRA12"></canvas></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>El (60%) de los estudiantes aprobaron el RA, sin embargo no alcanzan el target de 70%, <strong>No aprobaron el RA.</strong></p>
+        </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-  const ctx = document.getElementById('chartAprobacion').getContext('2d');
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Aprobado', 'No Aprobado'],
-      datasets: [{
-        label: 'Estado de Competencia',
-        data: [4, 1],
-        backgroundColor: ['#4CAF50', '#F44336'],
-        borderWidth: 1
-      }]
-    },
-    options: {
-      plugins: {
-        legend: {
-          position: 'bottom'
-        }
-      }
-    }
-  });
-</script>
+        <div class="seccion-ra">
+            <h3>Resultado de Aprendizaje: RA2</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Curso</th>
+                        <th>Estudiantes</th>
+                        <th>Aprobaron</th>
+                        <th>No Aprobaron</th>
+                        <th>Estado</th>
+                        <th>Descargar</th>
+                        <th>Resultado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Animación 3D</td>
+                        <td>25</td>
+                        <td>20</td>
+                        <td>5</td>
+                        <td><span style="background-color: #4CAF50; color: white; padding: 4px 10px; border-radius: 12px; display: inline-block; font-weight: bold;"> Aprobado (80%)</span></td>
 
+                        <td><a href="#"> Evidencia(📎)</a> <br> <a href="#"> Plan de Mejora (📄)</a></td>
+                        
+                        <td><canvas class="grafico-mini" id="chartRA2"></canvas></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>El (80%) de los estudiantes <strong>Aprobaron el RA.</strong> </p>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            function crearGrafico(id, aprobados, perdidos) {
+                const ctx = document.getElementById(id).getContext('2d');
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Aprobado', 'No Aprobado'],
+                        datasets: [{
+                            data: [aprobados, perdidos],
+                            backgroundColor: ['#4CAF50', '#F44336']
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+
+            // RA individuales
+            crearGrafico('chartRA1', 18, 2);
+            crearGrafico('chartRA2', 20, 5);
+            crearGrafico('chartRA12', 2, 8);
+
+            
+
+            // Gráfico de competencia
+            crearGrafico('chartCompetencia', 1, 1); // 1 RA aprobado, 1 perdido
+        </script>
 </body>
+
 </html>

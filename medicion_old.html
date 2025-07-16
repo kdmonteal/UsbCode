@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Evaluación del Curso y Competencias</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      padding: 2rem;
+    }
+    h3 {
+      text-align: center;
+    }
+    .filtros {
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      text-align: center;
+    }
+     .seccion {
+      margin-bottom: 2rem;
+     }
+    select {
+      padding: 0.5rem;
+      margin-right: 1rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.75rem;
+      text-align: left;
+    }
+    th {
+      /* background-color: #ff9900; */
+      color: #000;
+    }
+    
+    .competencia-grafico {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .competencia-info {
+      flex: 1;
+      padding-right: 2rem;
+      min-width: 300px;
+    }
+    .grafico {
+      flex: 1;
+      height: 300px;
+      text-align: center;
+    }
+    canvas#chartAprobacion {
+      max-width: 100%;
+    }
+
+    input[type="file"] {
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="filtros">
+    <label>Carrera:
+      <select>
+        <option>Ingeniería Multimedia</option>
+      </select>
+    </label>
+    <label>Pensum:
+      <select>
+        <option>Pensum 2023-1</option>
+      </select>
+    </label>
+    <label>Materia:
+      <select>
+        <option>Computación Gráfica</option>
+      </select>
+    </label>
+  </div>
+
+  <h3>Evaluación del Curso: Computación Gráfica</h3>
+
+
+  <div class="seccion competencia-grafico">
+  <div class="competencia-info">
+    <h2>Competencia Asociada</h2>
+    <p><strong>Diseña soluciones visuales interactivas mediante herramientas gráficas, modelado y animación 3D.</strong></p>
+    <p><strong>Resultados de Aprendizaje</strong></p>
+    <ul>
+      <li>Aplica conceptos de modelado 3D en herramientas como Blender.</li>
+      <li>Integra elementos visuales en entornos de desarrollo como Unity o Three.js.</li>
+      <li>Desarrolla piezas visuales aplicando principios de diseño computacional.</li>
+    </ul>
+  </div>
+
+  <div class="grafico"><canvas id="chartAprobacion"></canvas></div>
+</div>
+  </div>
+
+   <div class="seccion">
+    <h2>Estudiantes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Nota Final</th>
+          <th>Estado de Competencia</th>
+        </tr>
+      </thead>
+      <tbody>
+        
+    <tr>
+        <td>Laura Gómez</td>
+        <td>4.7</td>
+        <td>Aprobado</td>
+    </tr>
+    
+    <tr>
+        <td>Mateo Rodríguez</td>
+        <td>3.9</td>
+        <td>Aprobado</td>
+    </tr>
+    
+    <tr>
+        <td>Isabella Torres</td>
+        <td>4.3</td>
+        <td>Aprobado</td>
+    </tr>
+    
+    <tr>
+        <td>Santiago Ramírez</td>
+        <td>2.8</td>
+        <td>No Aprobado</td>
+    </tr>
+    
+    <tr>
+        <td>Valentina Pérez</td>
+        <td>4.0</td>
+        <td>Aprobado</td>
+    </tr>
+    
+      </tbody>
+    </table>
+</div>
+  <div class="seccion">
+    <h2>Cargar Evidencias</h2><p>Adjunta archivos que evidencien el trabajo del curso (ej. informes, proyectos, capturas).</p>
+    <input type="file" accept=".pdf,.zip">
+  </div>
+
+  <div class="seccion">
+    <h2>Plan de Mejora</h2><p>Sube un documento que describa las acciones a implementar para mejorar el desempeño del curso en futuras ediciones.</p>
+    <input type="file" accept=".pdf,.docx">
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('chartAprobacion').getContext('2d');
+  new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Aprobado', 'No Aprobado'],
+      datasets: [{
+        label: 'Estado de Competencia',
+        data: [4, 1],
+        backgroundColor: ['#4CAF50', '#F44336'],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      plugins: {
+        legend: {
+          position: 'bottom'
+        }
+      }
+    }
+  });
+</script>
+
+</body>
+</html>
