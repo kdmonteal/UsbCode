@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Evaluación del Curso: Computación Gráfica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            padding: 2rem;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        .filtros {
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            text-align: center;
+        }
+
+        .seccion {
+            margin-bottom: 2rem;
+        }
+
+        select {
+            padding: 0.5rem;
+            margin-right: 1rem;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            /* background-color: #ff9900; */
+            color: #000;
+        }
+
+        .competencia-grafico {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .competencia-info {
+            flex: 1;
+            padding-right: 2rem;
+            min-width: 300px;
+        }
+
+        .grafico {
+            flex: 1;
+            height: 300px;
+            text-align: center;
+        }
+
+        canvas#chartAprobacion {
+            max-width: 100%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #ff9900;
+            color: #fff;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 4px;
+        }
+
+        input[type="file"] {
+            margin-top: 0.5rem;
+        }
+
+        .estado-aprobado {
+            color: green;
+            font-weight: bold;
+        }
+
+        .estado-no {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const ra = params.get("ra");
+        const materia = params.get("materia");
+
+        // Ejemplo de uso:
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("nombre-materia").textContent = materia;
+            document.getElementById("nombre-ra").textContent = ra;
+        });
+    </script>
+</head>
+
+<body>
+
+    <!-- <h3>Evaluación del Curso: <span id="nombre-materia"></span></h3>
+<p>Resultado de Aprendizaje Evaluado: <strong><span id="nombre-ra"></span></strong></p> -->
+    <div class="filtros">
+        <label>Carrera:
+            <select>
+                <option>Ingeniería Multimedia</option>
+            </select>
+        </label>
+        <label>Pensum:
+            <select>
+                <option>Pensum 2023-1</option>
+            </select>
+        </label>
+        <label>Materia:
+            <select>
+                <option>Computación Gráfica</option>
+            </select>
+        </label>
+        <label>RA:
+            <select>
+                <option>3</option>
+            </select>
+        </label>
+    </div>
+
+    <h3>Evaluación por Resultado de Aprendizaje</h3>
+
+    <div class="seccion competencia-grafico">
+        <div class="competencia-info">
+            <h2>Competencia Asociada</h2>
+            <p><strong>Diseña soluciones visuales interactivas mediante herramientas gráficas, modelado y animación
+                    3D.</strong></p>
+            <p><strong>Resultados de Aprendizaje</strong></p>
+            <ul>
+                <li>Aplica conceptos de modelado 3D en herramientas como Blender.</li>
+            </ul>
+        </div>
+
+        <div class="grafico">
+            <canvas id="chartAprobacion"></canvas>
+        </div>
+    </div>
+
+    <div class="seccion">
+        <h2>Estudiantes</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Nota del RA</th>
+                    <th>Estado de Competencia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Laura Gómez</td>
+                    <td><input type="number" min="0" max="5" step="0.1" onchange="evaluar(this)"></td>
+                    <td class="estado">—</td>
+                </tr>
+                <tr>
+                    <td>Mateo Rodríguez</td>
+                    <td><input type="number" min="0" max="5" step="0.1" onchange="evaluar(this)"></td>
+                    <td class="estado">—</td>
+                </tr>
+                <tr>
+                    <td>Isabella Torres</td>
+                    <td><input type="number" min="0" max="5" step="0.1" onchange="evaluar(this)"></td>
+                    <td class="estado">—</td>
+                </tr>
+                <tr>
+                    <td>Santiago Ramírez</td>
+                    <td><input type="number" min="0" max="5" step="0.1" onchange="evaluar(this)"></td>
+                    <td class="estado">—</td>
+                </tr>
+                <tr>
+                    <td>Valentina Pérez</td>
+                    <td><input type="number" min="0" max="5" step="0.1" onchange="evaluar(this)"></td>
+                    <td class="estado">—</td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="mensajeTarget" style="text-align:center; font-weight:bold; margin-top: 1rem;"></div>
+
+    </div>
+
+    <div class="seccion">
+        <h2>Cargar Evidencias</h2>
+        <p>Adjunta archivos que evidencien el trabajo del curso (informes, proyectos, capturas, etc).</p>
+        <input type="file" accept=".pdf,.zip">
+    </div>
+
+    <div class="seccion">
+        <h2>Plan de Mejora</h2>
+        <p>Sube un documento que describa las acciones a implementar para mejorar el desempeño del curso en futuras
+            ediciones.</p>
+        <input type="file" accept=".pdf,.docx" id="inputMejora">
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function evaluar(input) {
+            const nota = parseFloat(input.value);
+            const estadoTd = input.parentElement.nextElementSibling;
+
+            if (isNaN(nota)) {
+                estadoTd.textContent = "—";
+                estadoTd.className = "estado";
+                return;
+            }
+
+            if (nota >= 3.5) {
+                estadoTd.textContent = "Aprobado";
+                estadoTd.className = "estado estado-aprobado";
+            } else {
+                estadoTd.textContent = "No Aprobado";
+                estadoTd.className = "estado estado-no";
+            }
+        }
+
+        let chart; // referencia global al gráfico
+
+        function evaluar(input) {
+            const nota = parseFloat(input.value);
+            const estadoTd = input.parentElement.nextElementSibling;
+
+            if (isNaN(nota)) {
+                estadoTd.textContent = "—";
+                estadoTd.className = "estado";
+            } else if (nota >= 3.5) {
+                estadoTd.textContent = "Aprobado";
+                estadoTd.className = "estado estado-aprobado";
+            } else {
+                estadoTd.textContent = "No Aprobado";
+                estadoTd.className = "estado estado-no";
+            }
+
+            actualizarGrafico();
+        }
+
+        function actualizarGrafico() {
+            const inputs = document.querySelectorAll('input[type="number"]');
+            let aprobados = 0;
+            let noAprobados = 0;
+            let totalNotas = 0;
+
+            inputs.forEach(input => {
+                const nota = parseFloat(input.value);
+                if (!isNaN(nota)) {
+                    totalNotas++;
+                    if (nota >= 3.5) aprobados++;
+                    else noAprobados++;
+                }
+            });
+
+            const canvas = document.getElementById('chartAprobacion');
+            const ctx = canvas.getContext('2d');
+            const mensajeTarget = document.getElementById("mensajeTarget");
+            const inputMejora = document.getElementById("inputMejora");
+
+            // Si no hay notas válidas
+            if (totalNotas === 0) {
+                if (chart) {
+                    chart.destroy();
+                    chart = null;
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+                mensajeTarget.textContent = "";
+                inputMejora.disabled = true;
+                return;
+            }
+
+            const porcentaje = (aprobados / totalNotas) * 100;
+
+            const porcentajeTexto = porcentaje.toFixed(1);
+
+            if (porcentaje >= 70) {
+                mensajeTarget.textContent = `Se alcanza el resultado de aprendizaje con un ${porcentajeTexto}% de aprobación.`;
+                inputMejora.disabled = true;
+            } else {
+                mensajeTarget.textContent = `Solo el ${porcentajeTexto}% del curso aprobó el resultado de aprendizaje. Se requiere un plan de mejora.`;
+                inputMejora.disabled = false;
+            }
+
+            if (chart) {
+                chart.data.datasets[0].data = [aprobados, noAprobados];
+                chart.update();
+            } else {
+                chart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Aprobado', 'No Aprobado'],
+                        datasets: [{
+                            label: 'Estado de Competencia',
+                            data: [aprobados, noAprobados],
+                            backgroundColor: ['#4CAF50', '#F44336'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                position: 'bottom'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+
+</html>

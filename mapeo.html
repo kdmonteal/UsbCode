@@ -37,9 +37,9 @@
 
   <script>
     const resultados = [
-      { id: "RA1", desc: "Comprende los principios de programación estructurada.", competencia: "C1 - Programación", carrera: "Ingeniería Multimedia", pensum: "Pensum 2023-1" },
-      { id: "RA2", desc: "Aplica estructuras de control en problemas computacionales.", competencia: "C1 - Programación", carrera: "Ingeniería Multimedia", pensum: "Pensum 2023-1" },
-      { id: "RA3", desc: "Desarrolla interfaces gráficas básicas.", competencia: "C2 - Desarrollo Web", carrera: "Ingeniería Multimedia", pensum: "Pensum 2023-1" }
+      { id: "RA1", desc: "Comprende los principios de programación estructurada.", competencia: "Competencia 1 - Programación", carrera: "Ingeniería Multimedia", pensum: "Pensum 2023-1" },
+      { id: "RA2", desc: "Aplica estructuras de control en problemas computacionales.", competencia: "Competencia 1 - Programación", carrera: "Ingeniería Multimedia", pensum: "Pensum 2023-1" },
+      { id: "RA3", desc: "Desarrolla interfaces gráficas básicas.", competencia: "Competencia 2 - Desarrollo Web", carrera: "Ingeniería Multimedia", pensum: "Pensum 2023-1" }
     ];
 
     const materias = [
@@ -121,8 +121,9 @@
     }
 
     function mapearRA(idRA, materia) {
-      alert(`Mapeando:\nRA: ${idRA}\nMateria: ${materia}`);
-    // Aquí puedes insertar tu lógica personalizada para mostrar un gráfico, modal, visualización, etc.
+        // Codifica los datos para usarlos como parámetros URL
+        const url = `https://sites.google.com/view/plataforma-gestin/medicion-curso?ra=${encodeURIComponent(idRA)}&materia=${encodeURIComponent(materia)}`;
+        window.open(url, '_blank'); // Abre en una nueva pestaña
     }
 
     function asociarMaterias(id, desc) {
