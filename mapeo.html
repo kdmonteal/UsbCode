@@ -1,66 +1,24 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Relación Materias - Competencias y Resultados</title>
+  <title>Mapeo por Competencias</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #ffffff;
-      padding: 2rem;
-    }
-    h1 {
-      color: #ff9900;
-    }
-    .filtros {
-      margin-bottom: 2rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      text-align: center;
-    }
-    select {
-      padding: 0.5rem;
-      margin-right: 1rem;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 0.75rem;
-      text-align: left;
-      vertical-align: top;
-    }
-    th {
-      background-color: #ff9900;
-      color: #fff;
-    }
-    button {
-      background-color: #ff9900;
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 10px;
-      border: none;
-      cursor: pointer;
-    }
-    .mensaje {
-      font-size: 1.2rem;
-      color: #888;
-      margin-top: 2rem;
-      text-align: center;
-    }
+    body { font-family: Arial, sans-serif; background-color: #fff; padding: 2rem; }
+    h1 { color: #ff9900; text-align: center; }
+    .filtros { margin-bottom: 2rem; text-align: center; }
+    select { padding: 0.5rem; border-radius: 10px; font-size: 1rem; margin: 0 0.5rem; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    th, td { border: 1px solid #ccc; padding: 0.75rem; text-align: left; vertical-align: top; }
+    th { background-color: #ff9900; color: #fff; }
+    button { background-color: #ff9900; color: #fff; padding: 6px 12px; border-radius: 10px; border: none; cursor: pointer; margin-right: 0.5rem; }
+    .mensaje { text-align: center; font-size: 1.2rem; color: #888; margin-top: 2rem; }
+    .competencia { margin-top: 2rem; }
+    .competencia h2 { border-bottom: 2px solid #ff9900; padding-bottom: 0.5rem; }
   </style>
 </head>
 <body>
+  <h1>Asignar Materias por Resultado de Aprendizaje</h1>
   <div class="filtros">
     <label for="carrera">Carrera:</label>
     <select id="carrera" onchange="actualizarVista()">
@@ -74,109 +32,179 @@
     </select>
   </div>
   <div id="contenido">
-    <p class="mensaje">No hay información disponible para mostrar.</p>
+    <p class="mensaje">Seleccione carrera y pensum para continuar.</p>
   </div>
 
   <script>
-    const materiasPorSemestre = {"Semestre 1": [{"nombre": "Prec\u00e1lculo", "creditos": 3}, {"nombre": "Matem\u00e1ticas Discretas", "creditos": 3}, {"nombre": "Fundamentos de Programaci\u00f3n", "creditos": 3}, {"nombre": "Introducci\u00f3n a la Ingenier\u00eda", "creditos": 2}, {"nombre": "Comunicaci\u00f3n Oral y Escrita I", "creditos": 2}, {"nombre": "Human\u00edstica I", "creditos": 1}, {"nombre": "Ingl\u00e9s I", "creditos": 2}], "Semestre 2": [{"nombre": "F\u00edsica Mec\u00e1nica", "creditos": 4}, {"nombre": "C\u00e1lculo I", "creditos": 4}, {"nombre": "Programaci\u00f3n Orientada a Objetos", "creditos": 3}, {"nombre": "Taller Multimedia", "creditos": 2}, {"nombre": "Human\u00edstica III", "creditos": 2}, {"nombre": "Bienestar Institucional I", "creditos": 1}, {"nombre": "Ingl\u00e9s II", "creditos": 2}], "Semestre 3": [{"nombre": "C\u00e1lculo II", "creditos": 4}, {"nombre": "\u00c1lgebra Lineal", "creditos": 3}, {"nombre": "Dise\u00f1o de Medios Digitales", "creditos": 3}, {"nombre": "Guion para Medios Digitales", "creditos": 2}, {"nombre": "Human\u00edstica IV", "creditos": 2}, {"nombre": "Bienestar Institucional II", "creditos": 1}, {"nombre": "Ingl\u00e9s III", "creditos": 2}], "Semestre 4": [{"nombre": "Matem\u00e1ticas Especiales", "creditos": 4}, {"nombre": "Probabilidad y Estad\u00edstica", "creditos": 3}, {"nombre": "Computaci\u00f3n Gr\u00e1fica", "creditos": 3}, {"nombre": "Dibujo para Multimedia", "creditos": 2}, {"nombre": "Taller de Video y Fotograf\u00eda", "creditos": 2}, {"nombre": "Comunicaci\u00f3n Oral y Escrita II", "creditos": 2}, {"nombre": "Human\u00edstica V", "creditos": 1}, {"nombre": "Bienestar Institucional III", "creditos": 1}, {"nombre": "Ingl\u00e9s IV", "creditos": 2}], "Semestre 5": [{"nombre": "Base de Datos", "creditos": 4}, {"nombre": "Taller de Animaci\u00f3n 2D", "creditos": 2}, {"nombre": "Fundamentos de Redes", "creditos": 3}, {"nombre": "Audio Digital", "creditos": 2}, {"nombre": "Electiva en Ingenier\u00eda I", "creditos": 2}, {"nombre": "Human\u00edstica VI", "creditos": 2}, {"nombre": "Ingl\u00e9s V", "creditos": 2}], "Semestre 6": [{"nombre": "Desarrollo Web", "creditos": 3}, {"nombre": "Modelado 3D", "creditos": 3}, {"nombre": "Circuitos Digitales", "creditos": 3}, {"nombre": "Procesamiento Digital de Se\u00f1ales", "creditos": 2}, {"nombre": "Electiva en Ingenier\u00eda II", "creditos": 2}, {"nombre": "Gesti\u00f3n en Proyectos", "creditos": 2}, {"nombre": "Ingl\u00e9s VI", "creditos": 2}], "Semestre 7": [{"nombre": "Animaci\u00f3n e Integraci\u00f3n 3D", "creditos": 3}, {"nombre": "Electr\u00f3nica para Multimedia", "creditos": 3}, {"nombre": "Procesamiento de Im\u00e1genes", "creditos": 3}, {"nombre": "Edici\u00f3n y Post-producci\u00f3n de Video", "creditos": 2}, {"nombre": "Proyecto en Ingenier\u00eda", "creditos": 4}, {"nombre": "Ingl\u00e9s VII", "creditos": 2}], "Semestre 8": [{"nombre": "Dise\u00f1o de Experiencias Interactivas", "creditos": 3}, {"nombre": "Electiva en Ingenier\u00eda III", "creditos": 2}, {"nombre": "Legislaci\u00f3n para Contenidos Digitales", "creditos": 2}, {"nombre": "Pr\u00e1ctica Profesional", "creditos": 6}, {"nombre": "Ingl\u00e9s VIII", "creditos": 2}]};
+    const resultados = [
+      { id: "RA1", desc: "Comprende los principios de programación estructurada.", competencia: "C1 - Programación", carrera: "Ingeniería Multimedia", pensum: "Pensum 2023-1" },
+      { id: "RA2", desc: "Aplica estructuras de control en problemas computacionales.", competencia: "C1 - Programación", carrera: "Ingeniería Multimedia", pensum: "Pensum 2023-1" },
+      { id: "RA3", desc: "Desarrolla interfaces gráficas básicas.", competencia: "C2 - Desarrollo Web", carrera: "Ingeniería Multimedia", pensum: "Pensum 2023-1" }
+    ];
+
+    const materias = [
+      "Fundamentos de Programación",
+      "Programación Orientada a Objetos",
+      "Desarrollo Web",
+      "Taller Multimedia"
+    ];
 
     function actualizarVista() {
       const carrera = document.getElementById("carrera").value;
       const pensum = document.getElementById("pensum").value;
       const cont = document.getElementById("contenido");
-      const relaciones = JSON.parse(localStorage.getItem("relaciones") || "{}");
 
-      if (carrera === "Ingeniería Multimedia" && pensum === "Pensum 2023-1") {
-        let html = "";
-        for (const semestre in materiasPorSemestre) {
-          html += "<h2>" + semestre + "</h2>";
-          html += `<table>
+      if (!carrera || !pensum) {
+        cont.innerHTML = '<p class="mensaje">Seleccione carrera y pensum para continuar.</p>';
+        return;
+      }
+
+      const asociaciones = JSON.parse(localStorage.getItem("asociaciones") || "{}");
+      const competencias = {};
+
+      resultados.forEach(r => {
+        if (r.carrera === carrera && r.pensum === pensum) {
+          if (!competencias[r.competencia]) competencias[r.competencia] = [];
+          competencias[r.competencia].push(r);
+        }
+      });
+
+      let html = "";
+      for (const comp in competencias) {
+        html += `<div class='competencia'>
+          <h2>${comp}</h2>
+          <table>
             <thead>
               <tr>
-                <th>Materia</th>
-                <th>Créditos</th>
-                <th>Competencias Asociadas</th>
-                <th>Resultados Asociados</th>
+                <th>RA</th>
+                <th>Descripción</th>
+                <th>Materias Asignadas</th>
                 <th>Asignar</th>
               </tr>
             </thead>
             <tbody>`;
-          materiasPorSemestre[semestre].forEach(materia => {
-            const id = materia.nombre.replace(/ /g, "_");
-            const relacion = relaciones[id] || {};
-            const compList = (relacion.competencias || []).join(", ") || "—";
-            const resList = (relacion.resultados || []).map(r => `<li style='margin-left:1rem;'>• ${r}</li>`).join("") || "—";
 
-            html += `
-              <tr>
-                <td>${materia.nombre}</td>
-                <td>${materia.creditos}</td>
-                <td id="comp-${id}">${compList}</td>
-                <td id="res-${id}"><ul>${resList}</ul></td>
-                <td><button onclick="asociar('${id}')">Asignar</button></td>
-              </tr>`;
-          });
-          html += "</tbody></table>";
-        }
-        cont.innerHTML = html;
-      } else {
-        cont.innerHTML = '<p class="mensaje">No hay información disponible para mostrar.</p>';
+        competencias[comp].forEach(r => {
+          const materiasAsig = asociaciones[r.id]?.materias || [];
+          html += `<tr>
+            <td>${r.id}</td>
+            <td>${r.desc}</td>
+            <td id="mat-${r.id}">
+            ${
+                materiasAsig.length
+                ? `<table style="width: 100%; border-collapse: collapse;">${
+                    materiasAsig.map(m =>
+                        `<tr>
+                            <td style="padding: 4px;">${m}</td>
+                            <td style="padding: 4px; text-align: center;">
+                                <button onclick="mapearRA('${r.id}', '${m}')" style="padding: 2px 6px; font-size: 0.8rem;">Medir</button>
+                            </td>
+                                <td style="padding: 4px; text-align: center;">
+                                <span id="estado-${r.id}-${m.replace(/\s+/g, '')}" style="padding: 2px 8px; border-radius: 12px; background-color: gray; color: white; font-size: 0.75rem;">
+                                    Pendiente
+                                </span>
+                                </td>                       
+                        </tr>`
+                    ).join("")
+                    }</table>`
+                : "—"
+            }
+            </td>
+            <td><button onclick="asociarMaterias('${r.id}', '${r.desc.replace(/'/g, '')}')">Asignar</button></td>
+          </tr>`;
+        });
+
+        html += `</tbody></table></div>`;
       }
+
+      cont.innerHTML = html;
     }
 
-    function asociar(id) {
-      const competencias = JSON.parse(localStorage.getItem("competencias")) || [];
-      const resultados = JSON.parse(localStorage.getItem("resultados")) || [];
+    function mapearRA(idRA, materia) {
+      alert(`Mapeando:\nRA: ${idRA}\nMateria: ${materia}`);
+    // Aquí puedes insertar tu lógica personalizada para mostrar un gráfico, modal, visualización, etc.
+    }
 
+    function asociarMaterias(id, desc) {
       const popup = window.open("", "popup", "width=600,height=600");
-      let html = "<h3>Asignar Competencias y Resultados</h3><p><strong>Competencias:</strong></p>";
-      competencias.forEach((c) => {
-        if (c.carrera === "Ingeniería Multimedia" && c.pensum === "Pensum 2023-1") {
-          html += `<label><input type='checkbox' class='comp' value='${c.nombre}'> ${c.nombre}</label><br>`;
-        }
-      });
-      html += "<hr><p><strong>Resultados:</strong></p>";
-      resultados.forEach((r) => {
-        if (r.carrera === "Ingeniería Multimedia" && r.pensum === "Pensum 2023-1") {
-          html += `<label><input type='checkbox' class='res' value='${r.desc}'> ${r.desc}</label><br>`;
-        }
-      });
-      html += `<br><button onclick="window.opener.guardar('${id}')">Guardar</button>`;
-      popup.document.write("<html><body style='font-family:Arial;padding:20px;'>" + html + "</body></html>");
-      popup.document.close();
-    }
-
-    function guardar(id) {
-      const comps = Array.from(document.querySelectorAll(".comp"))
-        .filter(cb => cb.checked)
-        .map(cb => cb.value);
-
-      const ress = Array.from(document.querySelectorAll(".res"))
-        .filter(cb => cb.checked)
-        .map(cb => cb.value);
-
-      // Guardar en localStorage
-      const relaciones = JSON.parse(localStorage.getItem("relaciones") || "{}");
-      if (!relaciones[id]) relaciones[id] = {};
-      relaciones[id].competencias = comps;
-      relaciones[id].resultados = ress;
-      localStorage.setItem("relaciones", JSON.stringify(relaciones));
-
-      // Actualizar tabla en la ventana principal
-      const compCelda = window.opener.document.getElementById("comp-" + id);
-      const resCelda = window.opener.document.getElementById("res-" + id);
-
-      compCelda.textContent = comps.length ? comps.join(", ") : "—";
-
-      if (ress.length) {
-        resCelda.innerHTML = "<ul>" + ress.map(r => "<li style='margin-left:1rem;'>• " + r + "</li>").join("") + "</ul>";
-      } else {
-        resCelda.textContent = "—";
+      if (!popup) {
+        alert("Por favor, permite las ventanas emergentes para continuar.");
+        return;
       }
 
-      window.close();
-    }
+      popup.document.title = "Asignar Materias";
+      const body = popup.document.body;
+      body.style.fontFamily = "Arial";
+      body.style.padding = "20px";
 
+      const titulo = popup.document.createElement("h3");
+      titulo.textContent = "Asignar materias a:";
+      body.appendChild(titulo);
+
+      const subtitulo = popup.document.createElement("p");
+      subtitulo.innerHTML = `<strong>${desc}</strong>`;
+      body.appendChild(subtitulo);
+
+      body.appendChild(popup.document.createElement("hr"));
+
+      materias.forEach((materia) => {
+        const label = popup.document.createElement("label");
+        const checkbox = popup.document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.value = materia;
+        checkbox.className = "mat";
+        label.appendChild(checkbox);
+        label.appendChild(popup.document.createTextNode(" " + materia));
+        body.appendChild(label);
+        body.appendChild(popup.document.createElement("br"));
+      });
+
+      const boton = popup.document.createElement("button");
+      boton.textContent = "Guardar";
+      boton.style.marginTop = "1rem";
+      boton.style.backgroundColor = "#ff9900";
+      boton.style.color = "#fff";
+      boton.style.border = "none";
+      boton.style.padding = "6px 12px";
+      boton.style.borderRadius = "10px";
+      boton.onclick = function () {
+        const checks = popup.document.querySelectorAll(".mat");
+        const materiasSel = Array.from(checks).filter(c => c.checked).map(c => c.value);
+        const asociaciones = JSON.parse(window.localStorage.getItem("asociaciones") || "{}");
+        if (!asociaciones[id]) asociaciones[id] = {};
+        asociaciones[id].materias = materiasSel;
+        window.localStorage.setItem("asociaciones", JSON.stringify(asociaciones));
+        const celda = window.document.getElementById("mat-" + id);
+        if (materiasSel.length) {
+        let tablaHTML = `
+            <table style="width: 100%; border-collapse: collapse;">
+            <tbody>
+                ${
+                materiasSel.map(m =>
+                    `<tr>
+                    <td style="padding: 4px;">${m}</td>
+                    <td style="padding: 4px; text-align: center;">
+                        <button onclick="mapearRA('${id}', '${m}')" style="padding: 2px 6px; font-size: 0.8rem;">Medir</button>
+                    </td>
+                    <td style="padding: 4px; text-align: center;">
+                        <span id="estado-${id}-${m.replace(/\s+/g, '')}" style="padding: 2px 8px; border-radius: 12px; background-color: gray; color: white; font-size: 0.75rem;">
+                        Pendiente
+                        </span>
+                    </td>
+                    </tr>`
+                ).join("")
+                }
+            </tbody>
+            </table>
+        `;
+        celda.innerHTML = tablaHTML;
+        } else {
+        celda.textContent = "—";
+        }
+        popup.close();
+      };
+      body.appendChild(boton);
+    }
   </script>
 </body>
 </html>
