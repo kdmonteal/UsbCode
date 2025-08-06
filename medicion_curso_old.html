@@ -40,7 +40,6 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1rem;
         }
 
         th,
@@ -51,8 +50,8 @@
         }
 
         th {
-            background-color: #ff9900;
-            color: #fff;
+            /* background-color: #ff9900; */
+            color: #000;
         }
 
         .competencia-grafico {
@@ -78,6 +77,29 @@
             max-width: 100%;
         }
 
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #ff9900;
+            color: #fff;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 4px;
+        }
+
         input[type="file"] {
             margin-top: 0.5rem;
         }
@@ -98,6 +120,7 @@
         const ra = params.get("ra");
         const materia = params.get("materia");
 
+        // Ejemplo de uso:
         document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("nombre-materia").textContent = materia;
             document.getElementById("nombre-ra").textContent = ra;
@@ -107,6 +130,8 @@
 
 <body>
 
+    <!-- <h3>Evaluación del Curso: <span id="nombre-materia"></span></h3>
+<p>Resultado de Aprendizaje Evaluado: <strong><span id="nombre-ra"></span></strong></p> -->
     <div class="filtros">
         <label>Carrera:
             <select>
@@ -119,9 +144,7 @@
             </select>
         </label>
         <label for="ciclo">Ciclo:
-            <select id="ciclo">
-                <option value="2025-1">2025-1</option>
-            </select>
+            <select id="ciclo"><option value="2025-1">2025-1</option></select></select>
         </label>
         <label>RA:
             <select>
@@ -151,27 +174,7 @@
         <div class="grafico">
             <canvas id="chartAprobacion"></canvas>
         </div>
-
-        <div style="margin-bottom: 1rem; padding: 1rem; background-color: #f9f9f9; border-left: 4px solid #ff9900;">
-            <h4>Escala de Evaluación del Resultado de Aprendizaje</h4>
-            <ul>
-                <li><strong>Sobresaliente</strong>: Demuestra un dominio excepcional del resultado de aprendizaje.
-                    (Equivale a una nota entre <strong>4.5 y 5.0</strong>)</li>
-                <li><strong>Satisfactorio</strong>: Cumple adecuadamente con el resultado de aprendizaje. (Equivale a
-                    una nota entre <strong>4.0 y 4.4</strong>)</li>
-                <li><strong>En desarrollo</strong>: Está en proceso de alcanzar el resultado de aprendizaje, con
-                    oportunidades de mejora. (Equivale a una nota entre <strong>3.0 y 3.9</strong>)</li>
-                <li><strong>Deficiente</strong>: No alcanza los niveles mínimos del resultado de aprendizaje. (Equivale
-                    a una nota entre <strong>0.0 y 2.9</strong>)</li>
-            </ul>
-            <p>Seleccione el nivel que mejor refleje el desempeño del estudiante con base en la evidencia disponible.
-            </p>
-                <p><strong>Nota:</strong> Se espera que el <strong>70% del grupo</strong> alcance los niveles de <em>en desarrollo</em> o superiores, lo que indica que el resultado de aprendizaje fue logrado de manera satisfactoria.</p>
-
-        </div>
     </div>
-
-
 
     <div class="seccion">
         <h2>Estudiantes</h2>
@@ -186,72 +189,33 @@
             <tbody>
                 <tr>
                     <td>Laura Gómez</td>
-                    <td>
-                        <select onchange="evaluar(this)">
-                            <option value="">Seleccione nivel</option>
-                            <option value="sobresaliente">Sobresaliente (4.5 - 5.0)</option>
-                            <option value="satisfactorio">Satisfactorio (4.0 - 4.4)</option>
-                            <option value="desarrollo">En desarrollo (3.0 - 3.9)</option>
-                            <option value="deficiente">Deficiente (0.0 - 2.9)</option>
-                        </select>
-                    </td>
+                    <td><input type="number" min="0" max="5" step="0.1" onchange="evaluar(this)"></td>
                     <td class="estado">—</td>
                 </tr>
                 <tr>
                     <td>Mateo Rodríguez</td>
-                    <td>
-                        <select onchange="evaluar(this)">
-                            <option value="">Seleccione nivel</option>
-                            <option value="sobresaliente">Sobresaliente (4.5 - 5.0)</option>
-                            <option value="satisfactorio">Satisfactorio (4.0 - 4.4)</option>
-                            <option value="desarrollo">En desarrollo (3.0 - 3.9)</option>
-                            <option value="deficiente">Deficiente (0.0 - 2.9)</option>
-                        </select>
-                    </td>
+                    <td><input type="number" min="0" max="5" step="0.1" onchange="evaluar(this)"></td>
                     <td class="estado">—</td>
                 </tr>
                 <tr>
                     <td>Isabella Torres</td>
-                    <td>
-                        <select onchange="evaluar(this)">
-                            <option value="">Seleccione nivel</option>
-                            <option value="sobresaliente">Sobresaliente (4.5 - 5.0)</option>
-                            <option value="satisfactorio">Satisfactorio (4.0 - 4.4)</option>
-                            <option value="desarrollo">En desarrollo (3.0 - 3.9)</option>
-                            <option value="deficiente">Deficiente (0.0 - 2.9)</option>
-                        </select>
-                    </td>
+                    <td><input type="number" min="0" max="5" step="0.1" onchange="evaluar(this)"></td>
                     <td class="estado">—</td>
                 </tr>
                 <tr>
                     <td>Santiago Ramírez</td>
-                    <td>
-                        <select onchange="evaluar(this)">
-                            <option value="">Seleccione nivel</option>
-                            <option value="sobresaliente">Sobresaliente (4.5 - 5.0)</option>
-                            <option value="satisfactorio">Satisfactorio (4.0 - 4.4)</option>
-                            <option value="desarrollo">En desarrollo (3.0 - 3.9)</option>
-                            <option value="deficiente">Deficiente (0.0 - 2.9)</option>
-                        </select>
-                    </td>
+                    <td><input type="number" min="0" max="5" step="0.1" onchange="evaluar(this)"></td>
                     <td class="estado">—</td>
                 </tr>
                 <tr>
                     <td>Valentina Pérez</td>
-                    <td>
-                        <select onchange="evaluar(this)">
-                            <option value="">Seleccione nivel</option>
-                            <option value="sobresaliente">Sobresaliente (4.5 - 5.0)</option>
-                            <option value="satisfactorio">Satisfactorio (4.0 - 4.4)</option>
-                            <option value="desarrollo">En desarrollo (3.0 - 3.9)</option>
-                            <option value="deficiente">Deficiente (0.0 - 2.9)</option>
-                        </select>
-                    </td>
+                    <td><input type="number" min="0" max="5" step="0.1" onchange="evaluar(this)"></td>
                     <td class="estado">—</td>
                 </tr>
             </tbody>
         </table>
         <div id="mensajeTarget" style="text-align:center; font-weight:bold; margin-top: 1rem;"></div>
+
     </div>
 
     <div class="seccion">
@@ -265,24 +229,39 @@
         <p>Sube un documento que describa las acciones a implementar para mejorar el desempeño del curso en futuras
             ediciones.</p>
         <input type="file" accept=".pdf,.docx" id="inputMejora">
-    </div>
 
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        let chart;
+        function evaluar(input) {
+            const nota = parseFloat(input.value);
+            const estadoTd = input.parentElement.nextElementSibling;
 
-        function evaluar(select) {
-            const nivel = select.value;
-            const estadoTd = select.parentElement.nextElementSibling;
-
-            if (!nivel) {
+            if (isNaN(nota)) {
                 estadoTd.textContent = "—";
                 estadoTd.className = "estado";
-                actualizarGrafico();
                 return;
             }
 
-            if (nivel === "sobresaliente" || nivel === "satisfactorio" || nivel === "desarrollo") {
+            if (nota >= 3.5) {
+                estadoTd.textContent = "Aprobado";
+                estadoTd.className = "estado estado-aprobado";
+            } else {
+                estadoTd.textContent = "No Aprobado";
+                estadoTd.className = "estado estado-no";
+            }
+        }
+
+        let chart; // referencia global al gráfico
+
+        function evaluar(input) {
+            const nota = parseFloat(input.value);
+            const estadoTd = input.parentElement.nextElementSibling;
+
+            if (isNaN(nota)) {
+                estadoTd.textContent = "—";
+                estadoTd.className = "estado";
+            } else if (nota >= 3.5) {
                 estadoTd.textContent = "Aprobado";
                 estadoTd.className = "estado estado-aprobado";
             } else {
@@ -294,20 +273,17 @@
         }
 
         function actualizarGrafico() {
-            const selects = document.querySelectorAll('tbody select');
+            const inputs = document.querySelectorAll('input[type="number"]');
             let aprobados = 0;
             let noAprobados = 0;
-            let totalEvaluados = 0;
+            let totalNotas = 0;
 
-            selects.forEach(select => {
-                const nivel = select.value;
-                if (nivel) {
-                    totalEvaluados++;
-                    if (nivel === "sobresaliente" || nivel === "satisfactorio" || nivel === "desarrollo") {
-                        aprobados++;
-                    } else {
-                        noAprobados++;
-                    }
+            inputs.forEach(input => {
+                const nota = parseFloat(input.value);
+                if (!isNaN(nota)) {
+                    totalNotas++;
+                    if (nota >= 3.5) aprobados++;
+                    else noAprobados++;
                 }
             });
 
@@ -316,7 +292,8 @@
             const mensajeTarget = document.getElementById("mensajeTarget");
             const inputMejora = document.getElementById("inputMejora");
 
-            if (totalEvaluados === 0) {
+            // Si no hay notas válidas
+            if (totalNotas === 0) {
                 if (chart) {
                     chart.destroy();
                     chart = null;
@@ -327,7 +304,8 @@
                 return;
             }
 
-            const porcentaje = (aprobados / totalEvaluados) * 100;
+            const porcentaje = (aprobados / totalNotas) * 100;
+
             const porcentajeTexto = porcentaje.toFixed(1);
 
             if (porcentaje >= 70) {
@@ -364,6 +342,7 @@
             }
         }
     </script>
+
 </body>
 
 </html>
