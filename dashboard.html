@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard M.I.C.A. - Director de Programa</title>
+
+  <style>
+    :root {
+      --accent: #ff9900;
+      --accent-dark: #e68500;
+      --card-bg: #fff;
+      --muted: #666;
+      --radius: 14px;
+    }
+
+    body{
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f7f7f8;
+      color: #222;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    h1{ color: var(--accent); margin:0; font-size:1.25rem; }
+    p.hint{ margin:0; color:var(--muted); font-size:0.9rem; }
+
+    /* Contenedor principal tipo tablero */
+    .board{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      max-width:1100px;
+      margin: 0 auto;
+    }
+
+    /* Barra superior con mensaje */
+    .top-note{
+      background: linear-gradient(90deg, rgba(255,153,0,0.06), rgba(255,153,0,0.03));
+      border-left: 4px solid var(--accent);
+      padding: 12px;
+      border-radius: 10px;
+    }
+
+    /* Grid de tarjetas (similar a tu dibujo: dos columnas simples) */
+    .cycles-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap:12px;
+    }
+
+    .card{
+      background: var(--card-bg);
+      padding: 12px;
+      border-radius: var(--radius);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      border:1px solid #eee;
+    }
+
+    .card h3{ margin:0 0 6px 0; font-size:1rem; color:#111; }
+    .small { font-size:0.86rem; color:var(--muted); margin-bottom:6px; }
+
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+      margin:6px 0;
+    }
+
+    .big-num{ font-weight:700; font-size:1.6rem; color:#111; }
+    .medidor { font-size:1.2rem; color:#444; }
+
+    /* progreso simple */
+    .progress-wrap{ background:#eee; border-radius:10px; height:12px; overflow:hidden; }
+    .progress-bar{ height:100%; background:var(--accent); width:0%; }
+
+    /* acciones */
+    .actions{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+    button{
+      background: var(--accent);
+      color:#fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-size:0.9rem;
+    }
+    button.secondary{
+      background: transparent;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+    button:active{ transform: translateY(1px); }
+
+    /* tabla de pendientes */
+    .panel{
+      background: var(--card-bg);
+      padding: 12px;
+      border-radius: var(--radius);
+      border:1px solid #eee;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.03);
+    }
+
+    table{
+      width:100%;
+      border-collapse: collapse;
+      margin-top:8px;
+      font-size:0.92rem;
+    }
+    th, td{ padding:8px 6px; border-bottom:1px solid #f1f1f1; text-align:left; }
+    th{ color:#333; font-weight:700; font-size:0.85rem; cursor: pointer; }
+    .center { text-align:center; }
+    .badge{ display:inline-block; padding:4px 8px; border-radius:999px; background:#f3f3f3; font-size:0.8rem; color:#333; }
+    .danger{ background:#fff0f0; color:#b30000; border:1px solid #ffd6d6; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div>
+      <h1>M.I.C.A. — Dashboard</h1>
+      <p class="hint">Panel rápido para que el director vea ciclos, pendientes y si las competencias / RA se están alcanzando.</p>
+    </div>
+
+    <div style="text-align:right;">
+      <div style="font-size:0.9rem; color:var(--muted);">Hoy: <strong id="today"></strong></div>
+      <div style="margin-top:6px;">
+        <button onclick="exportAllPDF()">Exportar todo (PDF)</button>
+        <button class="secondary" onclick="exportAllExcel()">Exportar Excel</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="board">
+
+    <div class="top-note">
+      <strong>¡Alerta rápida:</strong> <span id="countdownText">En 15 días debes completar el ciclo de medición</span>
+    </div>
+
+    <!-- Grid con las tarjetas tipo tu boceto -->
+    <div class="cycles-grid" id="cyclesGrid">
+      <!-- Las tarjetas se renderizan por JS -->
+    </div>
+
+    <!-- tabla de pendientes -->
+    <div class="panel">
+      <h3>Materias con estudiantes pendientes</h3>
+      <table id="pendientesTable">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Materia</th>
+            <th>Docente</th>
+            <th class="center">Pendientes</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- Librerías ligeras para export (ya las usas) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script>
+    // Fecha de hoy
+    document.getElementById('today').textContent = new Date().toLocaleDateString();
+
+    // Datos mock (fácil de reemplazar con fetch a tu API)
+    const data = {
+      cycles: [
+        {
+          id: '2025-2',
+          cursos: 5,
+          medidores: 0,
+          ra_pct: 72,      // promedio RA
+          pendientes: [
+            { code: 'FIS110', name: 'Física General', teacher: 'Ana Gomez', pending: 12 },
+            { code: 'MAT101', name: 'Cálculo I', teacher: 'María Pérez', pending: 8 },
+            { code: 'PROG202', name: 'Programación II', teacher: 'Carlos Ruiz', pending: 5 }
+          ]
+        },
+        {
+          id: '2025-1',
+          cursos: 5,
+          medidores: 0,
+          ra_pct: 69,
+          pendientes: [
+            { code: 'LAB100', name: 'Laboratorio I', teacher: 'Luis Díaz', pending: 3 }
+          ]
+        }
+      ],
+      countdownDays: 15 // del dibujo
+    };
+
+    // función para generar cada tarjeta igual al boceto
+    function renderCycles(){
+      const grid = document.getElementById('cyclesGrid');
+      grid.innerHTML = '';
+      data.cycles.forEach(c => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <h3>Ciclo <span style="color:var(--muted); font-weight:600;">${c.id}</span></h3>
+          <div class="small">Cursos</div>
+          <div class="row">
+            <div class="big-num">${c.cursos}</div>
+            <div class="medidor">Medidores: <strong>${c.medidores === 0 ? 'Ø' : c.medidores}</strong></div>
+          </div>
+
+          <div class="small" style="margin-top:8px;">% RA (promedio)</div>
+          <div class="row" style="align-items:center;">
+            <div style="flex:1; margin-right:8px;">
+              <div class="progress-wrap"><div class="progress-bar" style="width:${c.ra_pct}%;"></div></div>
+            </div>
+            <div style="width:48px; text-align:right;"><strong>${c.ra_pct}%</strong></div>
+          </div>
+
+          <div class="actions">
+            <button onclick="showPendientes('${c.id}')">Ver pendientes</button>
+            <button class="secondary" onclick="downloadReport('${c.id}')">Descargar reporte</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      // actualiza el texto del aviso (dibujo)
+      document.getElementById('countdownText').textContent = `En ${data.countdownDays} días debes completar el ciclo de medición`;
+    }
+
+    // Render inicial
+    renderCycles();
+
+    // Mostrar pendientes en la tabla (cuando presionan "Ver pendientes")
+    function showPendientes(cycleId){
+      const ciclo = data.cycles.find(x => x.id === cycleId);
+      const tbody = document.querySelector('#pendientesTable tbody');
+      tbody.innerHTML = '';
+      if(!ciclo || !ciclo.pendientes.length){
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#999;">No hay pendientes</td></tr>';
+        return;
+      }
+      ciclo.pendientes.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.code}</td>
+          <td>${p.name}</td>
+          <td>${p.teacher}</td>
+          <td class="center"><span class="badge ${p.pending > 10 ? 'danger' : ''}">${p.pending}</span></td>
+          <td><button onclick="openDetalle('${cycleId}','${p.code}')">Detalle</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+      // desplazar a la tabla
+      window.scrollTo({top: document.querySelector('#pendientesTable').offsetTop - 20, behavior:'smooth'});
+    }
+
+    // Detalle rápido (puedes expandir a modal si quieres)
+    function openDetalle(cycleId, code){
+      const ciclo = data.cycles.find(x => x.id === cycleId);
+      const materia = ciclo.pendientes.find(m => m.code === code);
+      alert(`Materia: ${materia.name}\nDocente: ${materia.teacher}\nPendientes: ${materia.pending}\n\n(Implementa aquí acciones: enviar notificación, abrir plan de recuperación, etc.)`);
+    }
+
+    // Descargar reporte (PDF simple) por ciclo
+    async function downloadReport(cycleId){
+      const { jsPDF } = window.jspdf;
+      const ciclo = data.cycles.find(x => x.id === cycleId);
+      const doc = new jsPDF({unit:'pt', format:'a4'});
+      doc.setFontSize(14);
+      doc.setTextColor(50);
+      doc.text(`Reporte - Ciclo ${ciclo.id}`, 40, 50);
+      doc.setFontSize(11);
+      doc.text(`Cursos: ${ciclo.cursos}    Medidores: ${ciclo.medidores}    %RA: ${ciclo.ra_pct}%`, 40, 74);
+
+      // tabla simple
+      let y = 100;
+      doc.setFontSize(10);
+      doc.text('Código', 40, y);
+      doc.text('Materia', 110, y);
+      doc.text('Docente', 320, y);
+      doc.text('Pendientes', 460, y);
+      y += 14;
+      ciclo.pendientes.forEach(p => {
+        doc.text(p.code, 40, y);
+        doc.text((p.name.length>30? p.name.slice(0,27)+'...' : p.name), 110, y);
+        doc.text(p.teacher, 320, y);
+        doc.text(String(p.pending), 460, y);
+        y += 14;
+        if(y > 750){ doc.addPage(); y = 40; }
+      });
+
+      doc.save(`reporte_${ciclo.id}.pdf`);
+    }
+
+    // Export completo a PDF
+    async function exportAllPDF(){
+      // simple: generar por cada ciclo
+      for(const c of data.cycles){
+        await downloadReport(c.id);
+      }
+    }
+
+    // Export a Excel (todos los ciclos)
+    function exportAllExcel(){
+      const wb = XLSX.utils.book_new();
+      data.cycles.forEach(c => {
+        const ws_data = [['Código','Materia','Docente','Pendientes']];
+        c.pendientes.forEach(p => ws_data.push([p.code, p.name, p.teacher, p.pending]));
+        const ws = XLSX.utils.aoa_to_sheet(ws_data);
+        XLSX.utils.book_append_sheet(wb, ws, `Ciclo_${c.id}`);
+      });
+      XLSX.writeFile(wb, 'pendientes_por_ciclo.xlsx');
+    }
+
+    // Inicial: mostrar pendientes del primer ciclo para que la tabla no esté vacía (opcional)
+    if(data.cycles.length) showPendientes(data.cycles[0].id);
+
+    // --- Si quieres reemplazar con datos reales (API), aquí un ejemplo:
+    /*
+    async function loadFromApi(){
+      const res = await fetch('/api/program/dashboard?programId=XXX');
+      const payload = await res.json();
+      // transformar payload a estructura 'data' y luego:
+      // data.cycles = payload.cycles; renderCycles();
+    }
+    */
+  </script>
+</body>
+</html>
