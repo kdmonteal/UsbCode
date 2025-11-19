@@ -6,236 +6,294 @@
   "Plan Academico": "2020-1",
   "Semestre 1": [
     {
+      "id": "123",
       "nombre": "Precálculo",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Matemáticas Discretas",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Fundamentos de Programación",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Introducción a la Ingeniería",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Comunicación Oral y Escrita I",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Humanística I",
       "creditos": 1
     },
     {
+      "id": "123",
       "nombre": "Inglés I",
       "creditos": 2
     }
   ],
   "Semestre 2": [
     {
+      "id": "123",
       "nombre": "Física Mecánica",
       "creditos": 4
     },
     {
+      "id": "123",
       "nombre": "Cálculo I",
       "creditos": 4
     },
     {
+      "id": "123",
       "nombre": "Programación Orientada a Objetos",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Taller Multimedia",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Humanística III",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Bienestar Institucional I",
       "creditos": 1
     },
     {
+      "id": "123",
       "nombre": "Inglés II",
       "creditos": 2
     }
   ],
   "Semestre 3": [
     {
+      "id": "123",
       "nombre": "Cálculo II",
       "creditos": 4
     },
     {
+      "id": "123",
       "nombre": "Álgebra Lineal",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Diseño de Medios Digitales",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Guion para Medios Digitales",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Humanística IV",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Bienestar Institucional II",
       "creditos": 1
     },
     {
+      "id": "123",
       "nombre": "Inglés III",
       "creditos": 2
     }
   ],
   "Semestre 4": [
     {
+      "id": "123",
       "nombre": "Matemáticas Especiales",
       "creditos": 4
     },
     {
+      "id": "123",
       "nombre": "Probabilidad y Estadística",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Computación Gráfica",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Dibujo para Multimedia",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Taller de Video y Fotografía",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Comunicación Oral y Escrita II",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Humanística V",
       "creditos": 1
     },
     {
+      "id": "123",
       "nombre": "Bienestar Institucional III",
       "creditos": 1
     },
     {
+      "id": "123",
       "nombre": "Inglés IV",
       "creditos": 2
     }
   ],
   "Semestre 5": [
     {
+      "id": "123",
       "nombre": "Base de Datos",
       "creditos": 4
     },
     {
+      "id": "123",
       "nombre": "Taller de Animación 2D",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Fundamentos de Redes",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Audio Digital",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Electiva en Ingeniería I",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Humanística VI",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Inglés V",
       "creditos": 2
     }
   ],
   "Semestre 6": [
     {
+      "id": "123",
       "nombre": "Desarrollo Web",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Modelado 3D",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Circuitos Digitales",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Procesamiento Digital de Señales",
       "creditos": 2
     },
     {
+      "id": "75362-2L",
       "nombre": "Electiva en Ingeniería II",
-      "creditos": 2
+      "creditos": 2,
+      "opciones": [{"nombre": "ELECT.DISENO DE VIDEO JUEGOS", "id2": "75362-2L-1"},
+       {"nombre": "Web 2", "id2": "75362-2L-2"},
+       {"nombre": "audio 2", "id2": "75362-2L-3"}]
     },
     {
+      "id": "123",
       "nombre": "Gestión en Proyectos",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Inglés VI",
       "creditos": 2
     }
   ],
   "Semestre 7": [
     {
+      "id": "123",
       "nombre": "Animación e Integración 3D",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Electrónica para Multimedia",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Procesamiento de Imágenes",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Edición y Post-producción de Video",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Proyecto en Ingeniería",
       "creditos": 4
     },
     {
+      "id": "123",
       "nombre": "Inglés VII",
       "creditos": 2
     }
   ],
   "Semestre 8": [
     {
+      "id": "123",
       "nombre": "Diseño de Experiencias Interactivas",
       "creditos": 3
     },
     {
+      "id": "123",
       "nombre": "Electiva en Ingeniería III",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Legislación para Contenidos Digitales",
       "creditos": 2
     },
     {
+      "id": "123",
       "nombre": "Práctica Profesional",
       "creditos": 6
     },
     {
+      "id": "123",
       "nombre": "Inglés VIII",
       "creditos": 2
     }
