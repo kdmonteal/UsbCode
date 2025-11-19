@@ -145,9 +145,9 @@
       <option value="Futbol">Programa Dirección Técnica en Fútbol</option>
     </select>
 
-    <label for="plan">Plan académico:</label>
+    <label for="plan">Pensum:</label>
     <select id="plan">
-      <option value="">Seleccione un plan académico</option>
+      <option value="">Seleccione un Pensum</option>
     </select>
 
     <label for="perfil">Perfil de egreso:</label>
@@ -183,7 +183,7 @@ function cerrarFormulario() {
 function loadPlanes() {
   const carrera = document.getElementById('carrera').value;
   const planSelect = document.getElementById('plan');
-  planSelect.innerHTML = '<option value="">Seleccione un plan académico</option>';
+  planSelect.innerHTML = '<option value="">Seleccione un Pensum</option>';
   if (planes[carrera]) {
     planes[carrera].forEach(plan => {
       const opt = document.createElement('option');
