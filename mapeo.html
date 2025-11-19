@@ -37,9 +37,9 @@
 
   <script>
     const resultados = [
-      { id: "RA1", desc: "Comprende los principios de programación estructurada.", competencia: "Competencia 1 - Programación", carrera: "Ingeniería Multimedia", Plan de estudios: "Plan de estudios 2023-1" },
-      { id: "RA2", desc: "Aplica estructuras de control en problemas computacionales.", competencia: "Competencia 1 - Programación", carrera: "Ingeniería Multimedia", Plan de estudios: "Plan de estudios 2023-1" },
-      { id: "RA3", desc: "Desarrolla interfaces gráficas básicas.", competencia: "Competencia 2 - Desarrollo Web", carrera: "Ingeniería Multimedia", Plan de estudios: "Plan de estudios 2023-1" }
+      { id: "RA1", desc: "Comprende los principios de programación estructurada.", competencia: "Competencia 1 - Programación", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" },
+      { id: "RA2", desc: "Aplica estructuras de control en problemas computacionales.", competencia: "Competencia 1 - Programación", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" },
+      { id: "RA3", desc: "Desarrolla interfaces gráficas básicas.", competencia: "Competencia 2 - Desarrollo Web", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" }
     ];
 
     const materias = [
@@ -51,10 +51,10 @@
 
     function actualizarVista() {
       const carrera = document.getElementById("carrera").value;
-      const Plan de estudios = document.getElementById("Plan de estudios").value;
+      const pensum = document.getElementById("Plan de estudios").value;
       const cont = document.getElementById("contenido");
 
-      if (!carrera || !Plan de estudios) {
+      if (!carrera || !pensum) {
         cont.innerHTML = '<p class="mensaje">Seleccione carrera y Plan de estudios para continuar.</p>';
         return;
       }
@@ -63,7 +63,7 @@
       const competencias = {};
 
       resultados.forEach(r => {
-        if (r.carrera === carrera && r.Plan de estudios === Plan de estudios) {
+        if (r.carrera === carrera && r.pensum === pensum) {
           if (!competencias[r.competencia]) competencias[r.competencia] = [];
           competencias[r.competencia].push(r);
         }
