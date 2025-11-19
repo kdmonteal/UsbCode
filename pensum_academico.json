@@ -1,4 +1,9 @@
 {
+  "Universidad": "San Buenaventura",
+  "Seccional": "Cali",
+  "Facultad": "Ingenieria",
+  "Programa": "Ingenieria Multimedia",
+  "Plan Academico": "2020-1",
   "Semestre 1": [
     {
       "nombre": "Precálculo",
