@@ -1,0 +1,21 @@
+{
+  "Universidad": "San Buenaventura",
+  "Seccional": "Cali",
+  "Facultad": "Ingenieria",
+  "Programa": "Ingenieria Multimedia",
+  "Plan Academico": "2020-1",
+  "Competencias": [
+    {
+      "id": "1",
+      "descripcion": "Competencia 1"
+    },
+    {
+      "id": "2",
+      "descripcion": "Competencia 2"
+    },
+    {
+      "id": "3",
+      "descripcion": "Competencia 3"
+    }
+  ]
+}

@@ -103,21 +103,20 @@
 </div>
 
 <label for="carrera">Carrera:</label>
-<select id="carrera" onchange="loadPlan de estudios()">
+<select id="carrera" onchange="loadPensum()">
   <option value="">Seleccione una carrera</option>
   <option value="Ingeniería Multimedia">Ingeniería Multimedia</option>
   <option value="Futbol">Programa Dirección Técnica en Fútbol</option>
 </select>
 
-<label for="Plan de estudios">Pensum:</label>
-<select id="Plan de estudios"><option value="">Seleccione un plan</option></select></select>
+<label for="pensum">Plan Académico:</label>
+<select id="pensum"><option value="">Seleccione un plan</option></select></select>
 
 <div class="button-container">
 <button class="button" onclick="abrirModalComp()">Agregar Competencia</button>
 <table id="tablaCompetencias">
   <thead>
-    <tr><th onclick="ordenarTabla(0, 'tablaCompetencias', 'iconComp')">Nombre <span id="iconComp-0">⇅</span></th><th onclick="ordenarTabla(1, 'tablaCompetencias', 'iconComp')">Descripción <span id="iconComp-1">⇅</span></th><th>Carrera</th><th>Plan de estudios</th><th>Acción</th></tr>
-  </thead>
+  <tr><th onclick="ordenarTabla(0, 'tablaCompetencias', 'iconComp')">Nombre <span id="iconComp-0">⇅</span></th><th onclick="ordenarTabla(1, 'tablaCompetencias', 'iconComp')">Descripción <span id="iconComp-1">⇅</span></th><th>Carrera</th><th>Pensum</th><th>Acción</th></tr>  </thead>
   <tbody></tbody>
 </table>
 
@@ -150,7 +149,7 @@
 </div>
 
 <script>
-  const Plan de estudioss = {
+  const pensums = {
     "Ingeniería Multimedia": ["Plan de estudios 2015-2", "Plan de estudios 2023-1"],
     "Futbol": ["Plan de estudios 2024-1"]
   };
@@ -159,16 +158,17 @@
   let resultados = JSON.parse(localStorage.getItem("resultados")) || [];
   let editIndex = -1;
 
-  function loadPlan de estudios() {
+  function loadPensum() {
     const carrera = document.getElementById("carrera").value;
-    const Plan de estudios = document.getElementById("Plan de estudios");
-    Plan de estudios.innerHTML = "";
-    if (Plan de estudioss[carrera]) {
-      Plan de estudioss[carrera].forEach(p => {
+    const pensum = document.getElementById("pensum");
+
+    pensum.innerHTML = "";
+    if (pensums[carrera]) {
+      pensums[carrera].forEach(p => {
         const opt = document.createElement("option");
         opt.value = p;
         opt.textContent = p;
-        Plan de estudios.appendChild(opt);
+        pensum.appendChild(opt);
       });
     }
   }
@@ -212,9 +212,9 @@
     const nombre = document.getElementById("nombreComp").value.trim();
     const desc = document.getElementById("descComp").value.trim();
     const carrera = document.getElementById("carrera").value;
-    const Plan de estudios = document.getElementById("Plan de estudios").value;
-    if (!nombre || !desc || !carrera || !Plan de estudios) return alert("Todos los campos son obligatorios.");
-    const data = { nombre, desc, carrera, Plan de estudios };
+    const pensum = document.getElementById("pensum").value;
+     if (!nombre || !desc || !currentCarrera || !currentPensum) return alert("Todos los campos son obligatorios.");
+  const data = { nombre, desc, carrera: currentCarrera, pensum: currentPensum };
     if (editIndex >= 0) {
       competencias[editIndex] = data;
     } else {
@@ -230,7 +230,7 @@ function guardarResultado() {
   const desc = document.getElementById("descResultado").value.trim();
   const seleccionadas = Array.from(document.getElementById("compSeleccionadas").selectedOptions).map(o => o.value);
   if (!desc || seleccionadas.length === 0) return alert("Complete la descripción y seleccione al menos una competencia.");
-  const data = { desc, competencias: seleccionadas, carrera: currentCarrera, Plan de estudios: currentPlan de estudios };
+  const data = { desc, competencias: seleccionadas, carrera: currentCarrera, pensum: currentPensum };
   if (resultadoEditIndex >= 0) {
     resultados[resultadoEditIndex] = data;
     resultadoEditIndex = -1;
@@ -242,7 +242,7 @@ function guardarResultado() {
   renderResultados();
 }
 
-}
+// }
 
 
   
@@ -264,7 +264,7 @@ function guardarResultado() {
   const desc = document.getElementById("descResultado").value.trim();
   const seleccionadas = Array.from(document.getElementById("compSeleccionadas").selectedOptions).map(o => o.value);
   if (!desc || seleccionadas.length === 0) return alert("Complete la descripción y seleccione al menos una competencia.");
-  const data = { desc, competencias: seleccionadas, carrera: currentCarrera, Plan de estudios: currentPlan de estudios };
+  const data = { desc, competencias: seleccionadas, carrera: currentCarrera, pensum: currentPensum };
   if (resultadoEditIndex >= 0) {
     resultados[resultadoEditIndex] = data;
     resultadoEditIndex = -1;
@@ -276,14 +276,14 @@ function guardarResultado() {
   renderResultados();
 }
 
-}
+// }
 
 
 function renderResultados() {
   const tbody = document.querySelector("#tablaResultados tbody");
   tbody.innerHTML = "";
   resultados.forEach((r, i) => {
-    if (r.carrera === currentCarrera && r.Plan de estudios === currentPlan de estudios) {
+    if (r.carrera === currentCarrera && r.pensum === currentPensum) {
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${r.desc}</td>
@@ -297,7 +297,7 @@ function renderResultados() {
   }
 }
 
-}
+// }
 
 function ordenarTabla(n, tableId, iconPrefix) {
   const table = document.getElementById(tableId);
@@ -337,11 +337,11 @@ function ordenarTabla(n, tableId, iconPrefix) {
   if (icon) icon.textContent = dir === "asc" ? "▲" : "▼";
 }
 
-document.getElementById("carrera").addEventListener("change", loadPlan de estudios);
+document.getElementById("carrera").addEventListener("change", loadPensum);
 window.onload = () => {
     renderCompetencias();
     renderResultados();
-    loadPlan de estudios();
+    loadPensum();
   };
 </script>
 
@@ -358,8 +358,8 @@ window.onload = () => {
 function exportarResultadosExcel() {
   const datos = [["Resultado", "Competencias Asociadas", "Carrera", "Plan de estudios"]];
   resultados.forEach(r => {
-    if (r.carrera === currentCarrera && r.Plan de estudios === currentPlan de estudios) {
-      datos.push([r.desc, r.competencias.join(", "), r.carrera, r.Plan de estudios]);
+    if (r.carrera === currentCarrera && r.pensum === currentPensum) {
+      datos.push([r.desc, r.competencias.join(", "), r.carrera, r.pensum]);
     }
   });
   const ws = XLSX.utils.aoa_to_sheet(datos);
@@ -374,11 +374,11 @@ async function exportarResultadosPDF() {
   doc.setFontSize(12);
   let y = 10;
   resultados.forEach((r, i) => {
-    if (r.carrera === currentCarrera && r.Plan de estudios === currentPlan de estudios) {
+    if (r.carrera === currentCarrera && r.pensum === currentPensum) {
       doc.text(`Resultado ${i + 1}`, 10, y);
       doc.text(`Descripción: ${r.desc}`, 10, y + 10);
       doc.text(`Competencias: ${r.competencias.join(", ")}`, 10, y + 20);
-      doc.text(`Carrera: ${r.carrera} | Plan de estudios: ${r.Plan de estudios}`, 10, y + 30);
+      doc.text(`Carrera: ${r.carrera} | Plan de estudios: ${r.pensum}`, 10, y + 30);
       y += 40;
       if (y > 270) {
         doc.addPage();
@@ -388,139 +388,18 @@ async function exportarResultadosPDF() {
   });
   doc.save("resultados_aprendizaje_filtrados.pdf");
 }
-</script>
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-const Plan de estudioss = {
-  "Ingeniería Multimedia": ["Plan de estudios 2015-2", "Plan de estudios 2023-1"],
-  "Futbol": ["Plan de estudios 2024-1"]
-};
-
-let competencias = JSON.parse(localStorage.getItem("competencias")) || [];
-let resultados = JSON.parse(localStorage.getItem("resultados")) || [];
-let currentCarrera = "";
-let currentPlan de estudios = "";
-let editIndex = -1;
-let resultadoEditIndex = -1;
-
-function loadPlan de estudios() {
-  const carrera = document.getElementById("carrera").value;
-  const Plan de estudiosSelect = document.getElementById("Plan de estudios");
-  Plan de estudiosSelect.innerHTML = '<option value="">Seleccione un Plan de estudios</option>';
-  if (Plan de estudioss[carrera]) {
-    Plan de estudioss[carrera].forEach(p => {
-      const opt = document.createElement("option");
-      opt.value = p;
-      opt.textContent = p;
-      Plan de estudiosSelect.appendChild(opt);
-    });
-  }
-  currentCarrera = carrera;
-  currentPlan de estudios = "";
-  renderCompetencias(); renderResultados();
-}
-
-document.getElementById("Plan de estudios").addEventListener("change", () => {
-  currentPlan de estudios = document.getElementById("Plan de estudios").value;
-  renderCompetencias(); renderResultados();
-  renderCompetencias(); renderResultados();
-});
-
-function abrirModalComp(index = -1) {
-  editIndex = index;
-  document.getElementById("overlay").style.display = "block";
-  document.getElementById("modalComp").style.display = "block";
-  if (index >= 0) {
-    const c = competencias[index];
-    document.getElementById("nombreComp").value = c.nombre;
-    document.getElementById("descComp").value = c.desc;
-    document.getElementById("tituloModalComp").innerText = "Editar Competencia";
-  } else {
-    document.getElementById("nombreComp").value = "";
-    document.getElementById("descComp").value = "";
-    document.getElementById("tituloModalComp").innerText = "Nueva Competencia";
-  }
-}
-
-function abrirModalResultado() {
-  document.getElementById("overlay").style.display = "block";
-  document.getElementById("modalResultado").style.display = "block";
-  const select = document.getElementById("compSeleccionadas");
-  select.innerHTML = "";
-  competencias.forEach(c => {
-    if (c.carrera === currentCarrera && c.Plan de estudios === currentPlan de estudios) {
-      const opt = document.createElement("option");
-      opt.value = c.nombre;
-      opt.textContent = c.nombre;
-      select.appendChild(opt);
-    }
-  });
-}
-
-function cerrarModales() {
-  document.getElementById("overlay").style.display = "none";
-  document.getElementById("modalComp").style.display = "none";
-  document.getElementById("modalResultado").style.display = "none";
-}
-
-function guardarCompetencia() {
-  const nombre = document.getElementById("nombreComp").value.trim();
-  const desc = document.getElementById("descComp").value.trim();
-  if (!nombre || !desc || !currentCarrera || !currentPlan de estudios) return alert("Todos los campos son obligatorios.");
-  const data = { nombre, desc, carrera: currentCarrera, Plan de estudios: currentPlan de estudios };
-  if (editIndex >= 0) {
-    competencias[editIndex] = data;
-  } else {
-    competencias.push(data);
-  }
-  localStorage.setItem("competencias", JSON.stringify(competencias));
-  cerrarModales();
-  renderCompetencias();
-}
-
-function guardarResultado() {
-  const desc = document.getElementById("descResultado").value.trim();
-  const seleccionadas = Array.from(document.getElementById("compSeleccionadas").selectedOptions).map(o => o.value);
-  if (!desc || seleccionadas.length === 0) return alert("Complete la descripción y seleccione al menos una competencia.");
-  const data = { desc, competencias: seleccionadas, carrera: currentCarrera, Plan de estudios: currentPlan de estudios };
-  if (resultadoEditIndex >= 0) {
-    resultados[resultadoEditIndex] = data;
-    resultadoEditIndex = -1;
-  } else {
-    resultados.push(data);
-  }
-  localStorage.setItem("resultados", JSON.stringify(resultados));
-  cerrarModales();
-  renderResultados();
-}
-
-function editarResultado(index) {
-  resultadoEditIndex = index;
-  const r = resultados[index];
-  if (r.carrera !== currentCarrera || r.Plan de estudios !== currentPlan de estudios) return;
-  document.getElementById("descResultado").value = r.desc;
-  abrirModalResultado();
-  const select = document.getElementById("compSeleccionadas");
-  Array.from(select.options).forEach(opt => {
-    opt.selected = r.competencias.includes(opt.value);
-  });
-}
 
 function renderCompetencias() {
   const tbody = document.querySelector("#tablaCompetencias tbody");
   tbody.innerHTML = "";
   competencias.forEach((c, i) => {
-    if (c.carrera === currentCarrera && c.Plan de estudios === currentPlan de estudios) {
+    if (c.carrera === currentCarrera && c.pensum === currentPensum) {
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${c.nombre}</td>
         <td>${c.desc}</td>
         <td>${c.carrera}</td>
-        <td>${c.Plan de estudios}</td>
+        <td>${c.pensum}</td>
         <td><button class="button" onclick="abrirModalComp(${i})">Editar</button></td>`;
       tbody.appendChild(row);
     }
@@ -534,7 +413,7 @@ function renderResultados() {
   const tbody = document.querySelector("#tablaResultados tbody");
   tbody.innerHTML = "";
   resultados.forEach((r, i) => {
-    if (r.carrera === currentCarrera && r.Plan de estudios === currentPlan de estudios) {
+    if (r.carrera === currentCarrera && r.pensum === currentPensum) {
       const row = document.createElement("tr");
       row.innerHTML = `
         <td>${r.desc}</td>
@@ -553,5 +432,7 @@ window.onload = () => {
   renderResultados();
 };
 </script>
+
+
 </body>
 </html>
