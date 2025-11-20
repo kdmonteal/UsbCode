@@ -97,7 +97,7 @@
 <body>
 
 <div class="instructions">
-  <p><strong>Paso 1:</strong> Seleccione el programa académico y el pensum vigente.</p>
+  <p><strong>Paso 1:</strong> Seleccione el programa académico y el plan académico.</p>
   <p><strong>Paso 2:</strong> Cree o edite competencias asociadas al programa.</p>
   <p><strong>Paso 3:</strong> Cree resultados de aprendizaje y asígnelos a la competencia correspondiente.</p>
 </div>
@@ -116,7 +116,7 @@
 <button class="button" onclick="abrirModalComp()">Agregar Competencia</button>
 <table id="tablaCompetencias">
   <thead>
-    <tr><th onclick="ordenarTabla(0, 'tablaCompetencias', 'iconComp')">Nombre <span id="iconComp-0">⇅</span></th><th onclick="ordenarTabla(1, 'tablaCompetencias', 'iconComp')">Descripción <span id="iconComp-1">⇅</span></th><th>Carrera</th><th>Pensum</th><th>Acción</th></tr>
+    <tr><th onclick="ordenarTabla(0, 'tablaCompetencias', 'iconComp')">Nombre <span id="iconComp-0">⇅</span></th><th onclick="ordenarTabla(1, 'tablaCompetencias', 'iconComp')">Descripción <span id="iconComp-1">⇅</span></th><th>Carrera</th><th>Plan de estudios</th><th>Acción</th></tr>
   </thead>
   <tbody></tbody>
 </table>
@@ -396,8 +396,8 @@ async function exportarResultadosPDF() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 const pensums = {
-  "Ingeniería Multimedia": ["Pensum 2015-2", "Pensum 2023-1"],
-  "Futbol": ["Pensum 2024-1"]
+  "Ingeniería Multimedia": ["Plan de estudios 2015-2", "Plan de estudios 2023-1"],
+  "Futbol": ["Plan de estudios 2024-1"]
 };
 
 let competencias = JSON.parse(localStorage.getItem("competencias")) || [];
@@ -410,7 +410,7 @@ let resultadoEditIndex = -1;
 function loadPensum() {
   const carrera = document.getElementById("carrera").value;
   const pensumSelect = document.getElementById("pensum");
-  pensumSelect.innerHTML = '<option value="">Seleccione un pensum</option>';
+  pensumSelect.innerHTML = '<option value="">Seleccione un plan de estudios</option>';
   if (pensums[carrera]) {
     pensums[carrera].forEach(p => {
       const opt = document.createElement("option");
