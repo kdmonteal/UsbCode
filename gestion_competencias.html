@@ -97,7 +97,7 @@
 <body>
 
 <div class="instructions">
-  <p><strong>Paso 1:</strong> Seleccione el programa académico y el Plan de estudios vigente.</p>
+  <p><strong>Paso 1:</strong> Seleccione el programa académico y el pensum vigente.</p>
   <p><strong>Paso 2:</strong> Cree o edite competencias asociadas al programa.</p>
   <p><strong>Paso 3:</strong> Cree resultados de aprendizaje y asígnelos a la competencia correspondiente.</p>
 </div>
@@ -116,7 +116,8 @@
 <button class="button" onclick="abrirModalComp()">Agregar Competencia</button>
 <table id="tablaCompetencias">
   <thead>
-  <tr><th onclick="ordenarTabla(0, 'tablaCompetencias', 'iconComp')">Nombre <span id="iconComp-0">⇅</span></th><th onclick="ordenarTabla(1, 'tablaCompetencias', 'iconComp')">Descripción <span id="iconComp-1">⇅</span></th><th>Carrera</th><th>Pensum</th><th>Acción</th></tr>  </thead>
+    <tr><th onclick="ordenarTabla(0, 'tablaCompetencias', 'iconComp')">Nombre <span id="iconComp-0">⇅</span></th><th onclick="ordenarTabla(1, 'tablaCompetencias', 'iconComp')">Descripción <span id="iconComp-1">⇅</span></th><th>Carrera</th><th>Pensum</th><th>Acción</th></tr>
+  </thead>
   <tbody></tbody>
 </table>
 
@@ -150,8 +151,8 @@
 
 <script>
   const pensums = {
-    "Ingeniería Multimedia": ["Plan de estudios 2015-2", "Plan de estudios 2023-1"],
-    "Futbol": ["Plan de estudios 2024-1"]
+    "Ingeniería Multimedia": ["Pensum 2015-2", "Pensum 2023-1"],
+    "Futbol": ["Pensum 2024-1"]
   };
 
   let competencias = JSON.parse(localStorage.getItem("competencias")) || [];
@@ -161,7 +162,6 @@
   function loadPensum() {
     const carrera = document.getElementById("carrera").value;
     const pensum = document.getElementById("pensum");
-
     pensum.innerHTML = "";
     if (pensums[carrera]) {
       pensums[carrera].forEach(p => {
@@ -213,8 +213,8 @@
     const desc = document.getElementById("descComp").value.trim();
     const carrera = document.getElementById("carrera").value;
     const pensum = document.getElementById("pensum").value;
-     if (!nombre || !desc || !currentCarrera || !currentPensum) return alert("Todos los campos son obligatorios.");
-  const data = { nombre, desc, carrera: currentCarrera, pensum: currentPensum };
+    if (!nombre || !desc || !carrera || !pensum) return alert("Todos los campos son obligatorios.");
+    const data = { nombre, desc, carrera, pensum };
     if (editIndex >= 0) {
       competencias[editIndex] = data;
     } else {
@@ -242,7 +242,7 @@ function guardarResultado() {
   renderResultados();
 }
 
-// }
+}
 
 
   
@@ -276,7 +276,7 @@ function guardarResultado() {
   renderResultados();
 }
 
-// }
+}
 
 
 function renderResultados() {
@@ -297,7 +297,7 @@ function renderResultados() {
   }
 }
 
-// }
+}
 
 function ordenarTabla(n, tableId, iconPrefix) {
   const table = document.getElementById(tableId);
@@ -356,7 +356,7 @@ window.onload = () => {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 function exportarResultadosExcel() {
-  const datos = [["Resultado", "Competencias Asociadas", "Carrera", "Plan de estudios"]];
+  const datos = [["Resultado", "Competencias Asociadas", "Carrera", "Pensum"]];
   resultados.forEach(r => {
     if (r.carrera === currentCarrera && r.pensum === currentPensum) {
       datos.push([r.desc, r.competencias.join(", "), r.carrera, r.pensum]);
@@ -378,7 +378,7 @@ async function exportarResultadosPDF() {
       doc.text(`Resultado ${i + 1}`, 10, y);
       doc.text(`Descripción: ${r.desc}`, 10, y + 10);
       doc.text(`Competencias: ${r.competencias.join(", ")}`, 10, y + 20);
-      doc.text(`Carrera: ${r.carrera} | Plan de estudios: ${r.pensum}`, 10, y + 30);
+      doc.text(`Carrera: ${r.carrera} | Pensum: ${r.pensum}`, 10, y + 30);
       y += 40;
       if (y > 270) {
         doc.addPage();
@@ -387,6 +387,127 @@ async function exportarResultadosPDF() {
     }
   });
   doc.save("resultados_aprendizaje_filtrados.pdf");
+}
+</script>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const pensums = {
+  "Ingeniería Multimedia": ["Pensum 2015-2", "Pensum 2023-1"],
+  "Futbol": ["Pensum 2024-1"]
+};
+
+let competencias = JSON.parse(localStorage.getItem("competencias")) || [];
+let resultados = JSON.parse(localStorage.getItem("resultados")) || [];
+let currentCarrera = "";
+let currentPensum = "";
+let editIndex = -1;
+let resultadoEditIndex = -1;
+
+function loadPensum() {
+  const carrera = document.getElementById("carrera").value;
+  const pensumSelect = document.getElementById("pensum");
+  pensumSelect.innerHTML = '<option value="">Seleccione un pensum</option>';
+  if (pensums[carrera]) {
+    pensums[carrera].forEach(p => {
+      const opt = document.createElement("option");
+      opt.value = p;
+      opt.textContent = p;
+      pensumSelect.appendChild(opt);
+    });
+  }
+  currentCarrera = carrera;
+  currentPensum = "";
+  renderCompetencias(); renderResultados();
+}
+
+document.getElementById("pensum").addEventListener("change", () => {
+  currentPensum = document.getElementById("pensum").value;
+  renderCompetencias(); renderResultados();
+  renderCompetencias(); renderResultados();
+});
+
+function abrirModalComp(index = -1) {
+  editIndex = index;
+  document.getElementById("overlay").style.display = "block";
+  document.getElementById("modalComp").style.display = "block";
+  if (index >= 0) {
+    const c = competencias[index];
+    document.getElementById("nombreComp").value = c.nombre;
+    document.getElementById("descComp").value = c.desc;
+    document.getElementById("tituloModalComp").innerText = "Editar Competencia";
+  } else {
+    document.getElementById("nombreComp").value = "";
+    document.getElementById("descComp").value = "";
+    document.getElementById("tituloModalComp").innerText = "Nueva Competencia";
+  }
+}
+
+function abrirModalResultado() {
+  document.getElementById("overlay").style.display = "block";
+  document.getElementById("modalResultado").style.display = "block";
+  const select = document.getElementById("compSeleccionadas");
+  select.innerHTML = "";
+  competencias.forEach(c => {
+    if (c.carrera === currentCarrera && c.pensum === currentPensum) {
+      const opt = document.createElement("option");
+      opt.value = c.nombre;
+      opt.textContent = c.nombre;
+      select.appendChild(opt);
+    }
+  });
+}
+
+function cerrarModales() {
+  document.getElementById("overlay").style.display = "none";
+  document.getElementById("modalComp").style.display = "none";
+  document.getElementById("modalResultado").style.display = "none";
+}
+
+function guardarCompetencia() {
+  const nombre = document.getElementById("nombreComp").value.trim();
+  const desc = document.getElementById("descComp").value.trim();
+  if (!nombre || !desc || !currentCarrera || !currentPensum) return alert("Todos los campos son obligatorios.");
+  const data = { nombre, desc, carrera: currentCarrera, pensum: currentPensum };
+  if (editIndex >= 0) {
+    competencias[editIndex] = data;
+  } else {
+    competencias.push(data);
+  }
+  localStorage.setItem("competencias", JSON.stringify(competencias));
+  cerrarModales();
+  renderCompetencias();
+}
+
+function guardarResultado() {
+  const desc = document.getElementById("descResultado").value.trim();
+  const seleccionadas = Array.from(document.getElementById("compSeleccionadas").selectedOptions).map(o => o.value);
+  if (!desc || seleccionadas.length === 0) return alert("Complete la descripción y seleccione al menos una competencia.");
+  const data = { desc, competencias: seleccionadas, carrera: currentCarrera, pensum: currentPensum };
+  if (resultadoEditIndex >= 0) {
+    resultados[resultadoEditIndex] = data;
+    resultadoEditIndex = -1;
+  } else {
+    resultados.push(data);
+  }
+  localStorage.setItem("resultados", JSON.stringify(resultados));
+  cerrarModales();
+  renderResultados();
+}
+
+function editarResultado(index) {
+  resultadoEditIndex = index;
+  const r = resultados[index];
+  if (r.carrera !== currentCarrera || r.pensum !== currentPensum) return;
+  document.getElementById("descResultado").value = r.desc;
+  abrirModalResultado();
+  const select = document.getElementById("compSeleccionadas");
+  Array.from(select.options).forEach(opt => {
+    opt.selected = r.competencias.includes(opt.value);
+  });
 }
 
 function renderCompetencias() {
@@ -432,7 +553,5 @@ window.onload = () => {
   renderResultados();
 };
 </script>
-
-
 </body>
 </html>
