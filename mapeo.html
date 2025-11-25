@@ -20,34 +20,41 @@
 <body>
   <h1>Asignar Competencias y Resultados de Aprendizaje por curso</h1>
   <div class="filtros">
-    <label for="carrera">Carrera:</label>
+    <label for="carrera">Programa Academico:</label>
     <select id="carrera" onchange="actualizarVista()">
       <option value="">Seleccione una carrera</option>
       <option value="Ingeniería Multimedia">Ingeniería Multimedia</option>
     </select>
     <label for="Plan de estudios">Plan de estudios:</label>
-    <select id="Plan de estudios" onchange="actualizarVista()">
+    <select id="Plan de estudios" onchange="">
       <option value="">Seleccione un plan</option>
-      <option value="Plan de estudios 2023-1">2023-1</option>
+      <option value="Plan de estudios 2023-1">2021-2</option>
     </select>
-     <label for="carrera">Semestre:</label>
+     <label for="carrera">Periodo:</label>
     <select id="carrera" onchange="">
-      <option value="">Seleccione el semestre</option>
+      <option value="">Seleccione el periodo</option>
       <option value="2026">2026-1</option>
+    </select>
+     <label for="carrera">Curso:</label>
+    <select id="carrera" onchange="actualizarVista()">
+      <option value="">Seleccione el curso</option>
+      <option value="pg">Proyecto de Grado</option>
+      <option value="em">Electronica para multimedia</option>
+
     </select>
   </div>
   <div id="contenido">
-    <p class="mensaje">Seleccione carrera y Plan de estudios para continuar.</p>
+    <p class="mensaje">Seleccione Programa Académico y Plan de estudios para continuar.</p>
   </div>
 
   <script>
     const resultados = [
-      { id: "Competencia 1", desc: "Capacidad para identificar, formular y resolver problemas complejos de ingeniería mediante la aplicación de principios de ingeniería, ciencias y matemáticas.", competencia: "Proyecto de Grado - 8vo Semestre", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" },
-      { id: "Competencia 2", desc: "Capacidad de aplicar diseño en ingeniería para producir soluciones que satisfagan necesidades específicas, considerando tanto la salud pública, la seguridad y el bienestar, como factores de carácter global, cultural, social, ambiental y económico.", competencia: "Proyecto de Grado - 8vo Semestre", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" },
-      { id: "Competencia 3", desc: "Capacidad para comunicarse de manera efectiva con diversas audiencias.", competencia: "Proyecto de Grado - 8vo Semestre", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" },
-      { id: "Competencia 3", desc: "Capacidad para comunicarse de manera efectiva con diversas audiencias.", competencia: "Electronica Multimedia - 7mo Semestre", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" }
+      { id: "C1", desc: "Capacidad para identificar, formular y resolver problemas complejos de ingeniería mediante la aplicación de principios de ingeniería, ciencias y matemáticas.", competencia: "Proyecto de Grado - 8vo Semestre", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" },
+      { id: "C2", desc: "Capacidad de aplicar diseño en ingeniería para producir soluciones que satisfagan necesidades específicas, considerando tanto la salud pública, la seguridad y el bienestar, como factores de carácter global, cultural, social, ambiental y económico.", competencia: "Proyecto de Grado - 8vo Semestre", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" },
+      { id: "C3", desc: "Capacidad para comunicarse de manera efectiva con diversas audiencias.", competencia: "Proyecto de Grado - 8vo Semestre", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" }
     ];
 
+    // { id: "C3", desc: "Capacidad para comunicarse de manera efectiva con diversas audiencias.", competencia: "Electronica Multimedia - 7mo Semestre", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" }
     // AQUI VA LA LOGICA DEL JSON
     const materias = [
       "RA1: Identifica un problema complejo en ingeniería donde se requiere aplicar conocimientos de matemáticas, ciencias e ingeniería.",
