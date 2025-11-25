@@ -18,7 +18,7 @@
   </style>
 </head>
 <body>
-  <h1>Asignar Materias por Resultado de Aprendizaje</h1>
+  <h1>Asignar Competencias y Resultados de Aprendizaje por curso</h1>
   <div class="filtros">
     <label for="carrera">Carrera:</label>
     <select id="carrera" onchange="actualizarVista()">
@@ -30,6 +30,11 @@
       <option value="">Seleccione un plan</option>
       <option value="Plan de estudios 2023-1">2023-1</option>
     </select>
+     <label for="carrera">Semestre:</label>
+    <select id="carrera" onchange="">
+      <option value="">Seleccione el semestre</option>
+      <option value="2026">2026-1</option>
+    </select>
   </div>
   <div id="contenido">
     <p class="mensaje">Seleccione carrera y Plan de estudios para continuar.</p>
@@ -37,17 +42,17 @@
 
   <script>
     const resultados = [
-      { id: "RA1", desc: "Comprende los principios de programación estructurada.", competencia: "Competencia 1 - Programación", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" },
-      { id: "RA2", desc: "Aplica estructuras de control en problemas computacionales.", competencia: "Competencia 1 - Programación", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" },
-      { id: "RA3", desc: "Desarrolla interfaces gráficas básicas.", competencia: "Competencia 2 - Desarrollo Web", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" }
+      { id: "Competencia 1", desc: "Capacidad para identificar, formular y resolver problemas complejos de ingeniería mediante la aplicación de principios de ingeniería, ciencias y matemáticas.", competencia: "Proyecto de Grado - 8vo Semestre", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" },
+      { id: "Competencia 2", desc: "Capacidad de aplicar diseño en ingeniería para producir soluciones que satisfagan necesidades específicas, considerando tanto la salud pública, la seguridad y el bienestar, como factores de carácter global, cultural, social, ambiental y económico.", competencia: "Proyecto de Grado - 8vo Semestre", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" },
+      { id: "Competencia 3", desc: "Capacidad para comunicarse de manera efectiva con diversas audiencias.", competencia: "Proyecto de Grado - 8vo Semestre", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" },
+      { id: "Competencia 3", desc: "Capacidad para comunicarse de manera efectiva con diversas audiencias.", competencia: "Electronica Multimedia - 7mo Semestre", carrera: "Ingeniería Multimedia", pensum: "Plan de estudios 2023-1" }
     ];
 
     // AQUI VA LA LOGICA DEL JSON
     const materias = [
-      "Fundamentos de Programación",
-      "Programación Orientada a Objetos",
-      "Desarrollo Web",
-      "Taller Multimedia"
+      "RA1: Identifica un problema complejo en ingeniería donde se requiere aplicar conocimientos de matemáticas, ciencias e ingeniería.",
+      "RA2: Formula un problema complejo en ingeniería, basado en conocimientos de matemáticas, ciencias, e ingeniería.",
+      "RA3: Resuelve un problema complejo en ingeniería, aplicando conocimientos de matemáticas, ciencias e ingeniería."
     ];
 
     function actualizarVista() {
@@ -77,9 +82,9 @@
           <table>
             <thead>
               <tr>
-                <th>RA</th>
+                <th>Competencia</th>
                 <th>Descripción</th>
-                <th>Materias Asignadas</th>
+                <th>RA</th>
                 <th>Asignar</th>
               </tr>
             </thead>
@@ -134,13 +139,13 @@
         return;
       }
 
-      popup.document.title = "Asignar Materias";
+      popup.document.title = "Asignar RA";
       const body = popup.document.body;
       body.style.fontFamily = "Arial";
       body.style.padding = "20px";
 
       const titulo = popup.document.createElement("h3");
-      titulo.textContent = "Asignar materias a:";
+      titulo.textContent = "Asignar RA a:";
       body.appendChild(titulo);
 
       const subtitulo = popup.document.createElement("p");

@@ -1,0 +1,123 @@
+<div id="mapeo-competencias" style="margin-top:3rem;">
+
+  <h1>Mapa de Competencias</h1>
+
+  <div class="filtros">
+    <label for="carreraComp">Carrera:</label>
+    <select id="carreraComp" onchange="cargarCursos()">
+      <option value="">Seleccione una carrera</option>
+      <option value="Ingeniería Multimedia">Ingeniería Multimedia</option>
+    </select>
+
+    <label for="planComp">Plan de estudios:</label>
+    <select id="planComp" onchange="cargarCursos()">
+      <option value="">Seleccione un plan</option>
+      <option value="2020-1">2020-1</option>
+    </select>
+  </div>
+
+  <div style="display:flex; gap:2rem;">
+    
+    <!-- LISTA DE CURSOS -->
+    <div id="listaCursos" style="width:30%; border-right:2px solid #ddd; padding-right:1rem;">
+      <p class="mensaje">Seleccione carrera y plan para cargar cursos.</p>
+    </div>
+
+    <!-- TABLA DE COMPETENCIAS -->
+    <div id="tablaCompetencias" style="width:70%;">
+      <p class="mensaje">Seleccione un curso para ver sus competencias.</p>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  let pensum = {};
+  
+  // CARGAMOS EL JSON
+  fetch("pensum_academico.json")
+    .then(res => res.json())
+    .then(data => { pensum = data; });
+
+  const opciones = ["", "I", "R", "A"];
+  const labels = { "I": "Introduce", "R": "Refuerza", "A": "Afianza" };
+
+  // Mapa almacenado
+  let mapeo = JSON.parse(localStorage.getItem("mapeoCompetencias") || "{}");
+
+  function cargarCursos() {
+    const carrera = document.getElementById("carreraComp").value;
+    const plan = document.getElementById("planComp").value;
+    const cont = document.getElementById("listaCursos");
+
+    if (!carrera || !plan) {
+      cont.innerHTML = '<p class="mensaje">Seleccione carrera y plan para cargar cursos.</p>';
+      return;
+    }
+
+    let html = `<h2>Cursos</h2><ul style="list-style:none; padding-left:0;">`;
+
+    Object.keys(pensum).forEach(sem => {
+      if (sem.startsWith("Semestre")) {
+        html += `<h3 style="color:#ff9900;">${sem}</h3>`;
+        pensum[sem].forEach(c => {
+          html += `
+            <li style="padding:6px; cursor:pointer; border-radius:6px;"
+                onmouseover="this.style.background='#eee'"
+                onmouseout="this.style.background=''"
+                onclick="mostrarCompetencias('${c.nombre.replace(/'/g,'')}')">
+              ${c.nombre}
+            </li>`;
+        });
+      }
+    });
+
+    html += "</ul>";
+    cont.innerHTML = html;
+  }
+
+  function mostrarCompetencias(curso) {
+    const cont = document.getElementById("tablaCompetencias");
+
+    if (!mapeo[curso]) {
+      mapeo[curso] = { C1: "", C2: "", C3: "", C4: "" };
+    }
+
+    let html = `
+      <h2>Competencias para: <span style="color:#ff9900">${curso}</span></h2>
+      <table>
+        <thead>
+          <tr>
+            <th>C1</th>
+            <th>C2</th>
+            <th>C3</th>
+            <th>C4</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            ${["C1","C2","C3","C4"].map(c => `
+              <td>
+                <select onchange="actualizar('${curso}','${c}',this.value)">
+                  ${opciones.map(op => `
+                    <option value="${op}" ${mapeo[curso][c] === op ? "selected" : ""}>
+                      ${op ? op + " - " + labels[op] : "--"}
+                    </option>
+                  `).join("")}
+                </select>
+              </td>`
+            ).join("")}
+          </tr>
+        </tbody>
+      </table>
+    `;
+
+    cont.innerHTML = html;
+  }
+
+  function actualizar(curso, comp, valor) {
+    mapeo[curso][comp] = valor;
+    localStorage.setItem("mapeoCompetencias", JSON.stringify(mapeo));
+  }
+</script>
