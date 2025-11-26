@@ -1,123 +1,273 @@
-<div id="mapeo-competencias" style="margin-top:3rem;">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mapa de Competencias</title>
 
-  <h1>Mapa de Competencias</h1>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: white;
+    padding: 2rem;
+  }
 
-  <div class="filtros">
-    <label for="carreraComp">Carrera:</label>
-    <select id="carreraComp" onchange="cargarCursos()">
-      <option value="">Seleccione una carrera</option>
-      <option value="Ingeniería Multimedia">Ingeniería Multimedia</option>
-    </select>
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+  }
 
-    <label for="planComp">Plan de estudios:</label>
-    <select id="planComp" onchange="cargarCursos()">
-      <option value="">Seleccione un plan</option>
-      <option value="2020-1">2020-1</option>
-    </select>
-  </div>
+  .filtros {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
 
-  <div style="display:flex; gap:2rem;">
-    
-    <!-- LISTA DE CURSOS -->
-    <div id="listaCursos" style="width:30%; border-right:2px solid #ddd; padding-right:1rem;">
-      <p class="mensaje">Seleccione carrera y plan para cargar cursos.</p>
-    </div>
+  select {
+    padding: 6px;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
 
-    <!-- TABLA DE COMPETENCIAS -->
-    <div id="tablaCompetencias" style="width:70%;">
-      <p class="mensaje">Seleccione un curso para ver sus competencias.</p>
-    </div>
+  /* CÍRCULOS DE SEMESTRE */
+  .circulo {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin: 0 6px;
+    cursor: pointer;
+    background: #999;
+    color: white;
+    transition: 0.2s;
+  }
 
-  </div>
+  .circulo.activo {
+    background: #ff9900;
+  }
 
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+
+  th, td {
+    border: 1px solid #ccc;
+    padding: 6px;
+    text-align: center;
+  }
+
+  th {
+    background: #ff9900;
+    color: white;
+  }
+
+  select {
+    padding: 4px;
+  }
+
+  #btnSiguiente {
+    background: #ff9900;
+    color: white;
+    padding: 12px 28px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    margin-top: 2rem;
+  }
+</style>
+</head>
+
+<body>
+
+<h1>Mapa de Competencias</h1>
+
+<!-- FILTROS -->
+<div class="filtros">
+  <label>Programa Académico:</label>
+  <select id="carrera" onchange="iniciarMapa()">
+    <option value="">Seleccione</option>
+    <option value="Ingeniería Multimedia">Ingeniería Multimedia</option>
+  </select>
+
+  <label style="margin-left:1rem;">Plan de estudios:</label>
+  <select id="plan" onchange="iniciarMapa()">
+    <option value="">Seleccione</option>
+    <option value="2020-1">2020-1</option>
+  </select>
 </div>
 
+<!-- SEMESTRES -->
+<div id="semestres" style="text-align:center; margin-bottom:2rem;"></div>
+
+<!-- CONTENIDO DINÁMICO -->
+<div id="contenidoSemestre" style="width:80%; margin:auto;"></div>
+
+<!-- BOTÓN SIGUIENTE -->
+<div style="text-align:center;">
+  <button id="btnSiguiente">Siguiente</button>
+</div>
+
+<div id="descripcionTipos" style="width:80%; margin:2rem auto; font-size:1rem; line-height:1.5;">
+  <h3 style="color:#ff9900;">Descripción de los tipos de Competencia</h3>
+  <p><strong>I – Introduce:</strong> El curso presenta por primera vez el tema o la competencia. El estudiante recibe el fundamento básico.</p>
+  <p><strong>R – Refuerza:</strong> El curso profundiza, amplía o ejercita lo aprendido previamente. Consolida los conocimientos base.</p>
+  <p><strong>A – Afianza:</strong> El curso lleva al dominio. El estudiante aplica la competencia de manera sólida y autónoma.</p>
+  <p><strong>NA – No Aplica:</strong> El curso no trabaja esa competencia.</p>
+</div>
+
+
 <script>
-  let pensum = {};
-  
-  // CARGAMOS EL JSON
-  fetch("pensum_academico.json")
-    .then(res => res.json())
-    .then(data => { pensum = data; });
+let pensum = {};
+let semestreActual = 1;
 
-  const opciones = ["", "I", "R", "A"];
-  const labels = { "I": "Introduce", "R": "Refuerza", "A": "Afianza" };
+// Guardado en navegador
+let mapa = JSON.parse(localStorage.getItem("mapaCompetencias") || "{}");
 
-  // Mapa almacenado
-  let mapeo = JSON.parse(localStorage.getItem("mapeoCompetencias") || "{}");
+// Opciones de select
+const opciones = ["", "I", "R", "A", "NA"];
+const labels = {
+  I: "Introduce",
+  R: "Refuerza",
+  A: "Afianza",
+  NA: "No Aplica"
+};
 
-  function cargarCursos() {
-    const carrera = document.getElementById("carreraComp").value;
-    const plan = document.getElementById("planComp").value;
-    const cont = document.getElementById("listaCursos");
+// Cargar el JSON externo
+fetch("pensum_academico.json")
+  .then(res => res.json())
+  .then(data => pensum = data);
 
-    if (!carrera || !plan) {
-      cont.innerHTML = '<p class="mensaje">Seleccione carrera y plan para cargar cursos.</p>';
-      return;
-    }
+// Inicia después de escoger carrera y plan
+function iniciarMapa() {
+  const carrera = document.getElementById("carrera").value;
+  const plan = document.getElementById("plan").value;
 
-    let html = `<h2>Cursos</h2><ul style="list-style:none; padding-left:0;">`;
+  const semDiv = document.getElementById("semestres");
 
-    Object.keys(pensum).forEach(sem => {
-      if (sem.startsWith("Semestre")) {
-        html += `<h3 style="color:#ff9900;">${sem}</h3>`;
-        pensum[sem].forEach(c => {
-          html += `
-            <li style="padding:6px; cursor:pointer; border-radius:6px;"
-                onmouseover="this.style.background='#eee'"
-                onmouseout="this.style.background=''"
-                onclick="mostrarCompetencias('${c.nombre.replace(/'/g,'')}')">
-              ${c.nombre}
-            </li>`;
-        });
-      }
-    });
-
-    html += "</ul>";
-    cont.innerHTML = html;
+  if (!carrera || !plan) {
+    semDiv.innerHTML = "";
+    document.getElementById("contenidoSemestre").innerHTML = "";
+    return;
   }
 
-  function mostrarCompetencias(curso) {
-    const cont = document.getElementById("tablaCompetencias");
-
-    if (!mapeo[curso]) {
-      mapeo[curso] = { C1: "", C2: "", C3: "", C4: "" };
-    }
-
-    let html = `
-      <h2>Competencias para: <span style="color:#ff9900">${curso}</span></h2>
-      <table>
-        <thead>
-          <tr>
-            <th>C1</th>
-            <th>C2</th>
-            <th>C3</th>
-            <th>C4</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            ${["C1","C2","C3","C4"].map(c => `
-              <td>
-                <select onchange="actualizar('${curso}','${c}',this.value)">
-                  ${opciones.map(op => `
-                    <option value="${op}" ${mapeo[curso][c] === op ? "selected" : ""}>
-                      ${op ? op + " - " + labels[op] : "--"}
-                    </option>
-                  `).join("")}
-                </select>
-              </td>`
-            ).join("")}
-          </tr>
-        </tbody>
-      </table>
+  // Generar círculos 1 – 8
+  let html = "";
+  for (let i = 1; i <= 8; i++) {
+    html += `
+      <span class="circulo ${i === 1 ? "activo" : ""}" onclick="cambiarSemestre(${i})">
+        ${i}
+      </span>
     `;
-
-    cont.innerHTML = html;
   }
 
-  function actualizar(curso, comp, valor) {
-    mapeo[curso][comp] = valor;
-    localStorage.setItem("mapeoCompetencias", JSON.stringify(mapeo));
+  semDiv.innerHTML = html;
+
+  cambiarSemestre(1);
+}
+
+function cambiarSemestre(n) {
+  semestreActual = n;
+
+  // Activar círculo seleccionado
+  document.querySelectorAll(".circulo").forEach((c, i) => {
+    c.classList.toggle("activo", i + 1 === n);
+  });
+
+  mostrarTablaSemestre(n);
+}
+
+function mostrarTablaSemestre(n) {
+  const cont = document.getElementById("contenidoSemestre");
+  const semKey = "Semestre " + n;
+
+  if (!pensum[semKey]) {
+    cont.innerHTML = "<p>No hay materias para este semestre.</p>";
+    return;
   }
+
+  let html = `<h2 style="color:#ff9900;">Semestre ${n}</h2>`;
+
+  html += `
+    <table>
+      <thead>
+        <tr>
+          <th>Materia</th>
+          <th>C1</th>
+          <th>C2</th>
+          <th>C3</th>
+          <th>C4</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  pensum[semKey].forEach(m => {
+    let key = m.nombre;
+
+    if (!mapa[key]) {
+      mapa[key] = { C1:"", C2:"", C3:"", C4:"" };
+    }
+
+    html += `
+      <tr>
+        <td style="text-align:left;">${m.nombre}</td>
+        ${["C1","C2","C3","C4"].map(c => `
+          <td>
+            <select onchange="actualizar('${key}','${c}',this.value)">
+              ${opciones.map(op => `
+                <option value="${op}" ${mapa[key][c] === op ? "selected" : ""}>
+                  ${op ? op + " - " + labels[op] : "--"}
+                </option>
+              `).join("")}
+            </select>
+          </td>
+        `).join("")}
+      </tr>
+    `;
+  });
+
+  html += "</tbody></table>";
+
+  cont.innerHTML = html;
+}
+
+// Guardar selección
+function actualizar(materia, competencia, valor) {
+  mapa[materia][competencia] = valor;
+  localStorage.setItem("mapaCompetencias", JSON.stringify(mapa));
+}
+
+// Botón siguiente
+document.getElementById("btnSiguiente").onclick = () => {
+
+  // Si NO está en el último semestre → avanzar
+  if (semestreActual < 8) {
+    cambiarSemestre(semestreActual + 1);
+    return;
+  }
+
+  // Si está en el semestre 8 → mostrar confirmación
+  const confirmar = confirm(
+    "Has llegado al último semestre.\n¿Deseas CONFIRMAR la selección realizada para todos los cursos?"
+  );
+
+  if (confirmar) {
+    alert("¡Selección confirmada! Puedes continuar con el siguiente paso.");
+    // Aquí puedes:
+    // - Enviar a backend
+    // - Guardar un archivo
+    // - Redirigir a otra página
+    // - Mostrar un resumen
+  } else {
+    alert("Puedes seguir ajustando tus selecciones.");
+  }
+};
+
 </script>
+
+</body>
+</html>
