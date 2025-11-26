@@ -1,557 +1,674 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gestión de Competencias y Resultados</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #ffffff;
-      margin: 0;
-      padding: 2rem;
-    }
-    h1, h2 {
-      color: #ff9900;
-      text-align: center;
-    }
-    .button {
-      background-color: #ff9900;
-      color: white;
-      border: none;
-      padding: 0.7rem 1.5rem;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
-    .button:hover {
-      background-color: #e68500;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    th, td {
-      padding: 0.75rem;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-    th {
-      /* background-color: #ff9900; */
-      color: 000;
-    }
-    .modal, .overlay {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-    }
-    .overlay {
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-    }
-    .modal {
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      background: white;
-      padding: 2rem;
-      border-radius: 15px;
-      width: 90vw;
-      max-width: 600px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-    select, textarea, input[type="text"] {
-      width: 100%;
-      padding: 0.6rem;
-      margin-top: 0.3rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    .instructions {
-      background-color: #fff3e0;
-      padding: 1rem;
-      border-left: 5px solid #ff9900;
-      border-radius: 10px;
-      margin-bottom: 1.5rem;
-    }
-  
-.button-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Gestión de Competencias</title>
+
+<!-- Estilo: limpio, responsivo, énfasis en #ff9900 -->
+<style>
+  :root{
+    --accent:#ff9900;
+    --muted:#f5f5f5;
+    --text:#222;
+    --card: #fff;
+    --danger: #d9534f;
+  }
+  body{
+    font-family: Inter, "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(180deg,#fff 0%, #fff 60%, #fcfcfc 100%);
+    color:var(--text);
+    margin:0;
+    padding:24px;
+  }
+  .wrap{
+    max-width:1100px;
+    margin:0 auto;
+  }
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    margin-bottom:18px;
+  }
+  h1{ color:var(--accent); margin:0; font-size:1.6rem; }
+  .controls{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+
+  button{
+    background:var(--accent);
+    color:white;
+    border:none;
+    padding:10px 14px;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:600;
+  }
+  button.secondary{
+    background:#fff;
+    color:var(--accent);
+    border:1px solid var(--accent);
+  }
+  button.ghost{
+    background:transparent;
+    color:var(--text);
+    border:1px solid #ddd;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns: 360px 1fr;
+    gap:18px;
+  }
+
+  /* panel izquierdo (wizard / lista) */
+  .panel{
+    background:var(--card);
+    border-radius:12px;
+    padding:14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+  }
+  .panel h2{ font-size:1.05rem; margin:0 0 8px 0; color:var(--accent); }
+  .sem-wizard{ display:flex; gap:8px; justify-content:center; margin:8px 0 12px 0; }
+  .badge{
+    width:36px;height:36px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+    background:#ddd;color:#333;font-weight:700;
+  }
+  .badge.active{ background:var(--accent); color:white; box-shadow:0 2px 8px rgba(0,0,0,0.12); }
+
+  /* lista competencias */
+  .list { margin-top:10px; max-height:540px; overflow:auto; padding-right:6px; }
+  .comp-item{
+    display:flex;align-items:flex-start;justify-content:space-between;
+    gap:8px;padding:10px;border-radius:8px;border:1px solid #eee;margin-bottom:8px;
+  }
+  .comp-meta{ flex:1; }
+  .comp-title{ font-weight:700; color:#333; margin-bottom:6px; }
+  .comp-desc{ color:#666; font-size:0.95rem; margin:0; }
+
+  /* panel derecho (editor) */
+  .editor{
+    background:var(--card);
+    border-radius:12px;
+    padding:18px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.04);
+  }
+  .editor h3{ margin-top:0; color:var(--accent); }
+  label{ display:block; font-weight:600; margin-top:10px; }
+  input[type="text"], textarea, select {
+    width:100%; padding:8px 10px; border-radius:8px; border:1px solid #ddd; margin-top:6px;
+  }
+  textarea{ min-height:84px; resize:vertical; }
+
+  .ra-list{ margin-top:12px; display:grid; gap:8px; }
+  .ra-item{
+    background: #fafafa; border:1px dashed #eee; padding:10px; border-radius:8px;
+    display:flex; gap:8px; align-items:flex-start; justify-content:space-between;
+  }
+  .ra-left{ flex:1; }
+  .small{ font-size:0.9rem; color:#555; }
+
+  .muted{
+    background:#fff8f1; padding:10px; border-left:4px solid var(--accent); border-radius:8px; color:#5a4a2b;
+    margin-top:12px;
+  }
+
+  .actions-row{ display:flex; gap:8px; margin-top:12px; align-items:center; flex-wrap:wrap; }
+
+  footer{ margin-top:18px; text-align:center; color:#666; font-size:0.95rem; }
+
+  /* responsive */
+  @media (max-width:900px){
+    .grid{ grid-template-columns: 1fr; }
+    .panel{ order:2; }
+    .editor{ order:1; }
+  }
+
+  .filtros { margin-bottom: 2rem; text-align: center; }
+  select { padding: 0.5rem; border-radius: 10px; font-size: 1rem; margin: 0 0.5rem; }
 
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<div class="instructions">
-  <p><strong>Paso 1:</strong> Seleccione el programa académico y el plan académico.</p>
-  <p><strong>Paso 2:</strong> Cree o edite competencias asociadas al programa.</p>
-  <p><strong>Paso 3:</strong> Cree resultados de aprendizaje y asígnelos a la competencia correspondiente.</p>
+  <header>
+    <h1>Gestión de Competencias y Resultados</h1>
+    <div class="controls">
+      <button id="btnNuevo" title="Crear nueva competencia">Agregar Competencia</button>
+      <button id="btnExportExcel" class="secondary">Exportar Excel</button>
+      <button id="btnExportPDF" class="secondary">Exportar PDF</button>
+    </div>
+  </header>
 </div>
 
-<label for="carrera">Carrera:</label>
-<select id="carrera" onchange="loadPensum()">
-  <option value="">Seleccione una carrera</option>
-  <option value="Ingeniería Multimedia">Ingeniería Multimedia</option>
-  <option value="Futbol">Programa Dirección Técnica en Fútbol</option>
-</select>
+<div class="filtros"
+     style="
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        gap:2rem;
+        margin:1.2rem auto 2rem auto;
+        padding:0.8rem 1rem;
+        width:fit-content;
+        font-size:0.95rem;
+     ">
 
-<label for="pensum">Plan Académico:</label>
-<select id="pensum"><option value="">Seleccione un plan</option></select></select>
+    <div style="display:flex; align-items:center; gap:0.4rem;">
+      <label for="carrera" style="font-weight:600;">Programa:</label>
+      <select id="carrera"
+              onchange="filtrarPrograma()"
+              style="padding:4px 8px; border-radius:6px; font-size:0.9rem; width:180px;">
+        <!-- <option value="">Seleccione programa</option> -->
+        <option value="Ingeniería Multimedia">Ingeniería Multimedia</option>
+      </select>
+    </div>
 
-<div class="button-container">
-<button class="button" onclick="abrirModalComp()">Agregar Competencia</button>
-<table id="tablaCompetencias">
-  <thead>
-    <tr><th onclick="ordenarTabla(0, 'tablaCompetencias', 'iconComp')">Nombre <span id="iconComp-0">⇅</span></th><th onclick="ordenarTabla(1, 'tablaCompetencias', 'iconComp')">Descripción <span id="iconComp-1">⇅</span></th><th>Carrera</th><th>Plan de estudios</th><th>Acción</th></tr>
-  </thead>
-  <tbody></tbody>
-</table>
+    <div style="display:flex; align-items:center; gap:0.4rem;">
+      <label for="planEstudio" style="font-weight:600;">Plan:</label>
+      <select id="planEstudio"
+              onchange="filtrarPrograma()"
+              style="padding:4px 8px; border-radius:6px; font-size:0.9rem; width:180px;">
+        <!-- <option value="">Seleccione plan</option> -->
+        <option value="2021-2">2021-2</option>
+      </select>
+    </div>
 
-<button class="button" onclick="abrirModalResultado()">Agregar Resultado</button>
-<table id="tablaResultados">
-  <thead>
-    <tr><th onclick="ordenarTabla(0, 'tablaResultados', 'iconRes')">Resultado <span id="iconRes-0">⇅</span></th><th onclick="ordenarTabla(1, 'tablaResultados', 'iconRes')">Competencias Asociadas <span id="iconRes-1">⇅</span></th><th>Acción</th></tr>
-  </thead>
-  <tbody></tbody>
-</table>
-
-<div class="overlay" id="overlay" onclick="cerrarModales()"></div>
-
-<div class="modal" id="modalComp">
-  <h2 id="tituloModalComp">Nueva Competencia</h2>
-  <label>Nombre:</label>
-  <input type="text" id="nombreComp">
-  <label>Descripción:</label>
-  <textarea id="descComp"></textarea>
-  <button class="button" onclick="guardarCompetencia()">Guardar</button>
 </div>
 
-<div class="modal" id="modalResultado">
-  <h2>Nuevo Resultado</h2>
-  <label>Descripción:</label>
-  <textarea id="descResultado"></textarea>
-  <label>Competencias:</label>
-  <select id="compSeleccionadas" multiple></select>
-  <button class="button" onclick="guardarResultado()">Guardar</button>
-</div>
+
+
+  <div class="grid">
+    <!-- PANEL IZQUIERDO: LISTA DE COMPETENCIAS + WIZARD INDICADOR -->
+    <aside class="panel">
+      <h2>Competencias creadas</h2>
+      <div class="sem-wizard" id="semWizard" style="justify-content:flex-start;"></div>
 
 <script>
-  const pensums = {
-    "Ingeniería Multimedia": ["Pensum 2015-2", "Pensum 2023-1"],
-    "Futbol": ["Pensum 2024-1"]
-  };
+// Mostrar dinámicamente el total de competencias en vez de 4 fijos:
+function renderWizardBadges() {
+  const div = document.getElementById("semWizard");
+  div.innerHTML = "";
 
-  let competencias = JSON.parse(localStorage.getItem("competencias")) || [];
-  let resultados = JSON.parse(localStorage.getItem("resultados")) || [];
-  let editIndex = -1;
-
-  function loadPensum() {
-    const carrera = document.getElementById("carrera").value;
-    const pensum = document.getElementById("pensum");
-    pensum.innerHTML = "";
-    if (pensums[carrera]) {
-      pensums[carrera].forEach(p => {
-        const opt = document.createElement("option");
-        opt.value = p;
-        opt.textContent = p;
-        pensum.appendChild(opt);
-      });
-    }
-  }
-
-  function abrirModalComp(index = -1) {
-    editIndex = index;
-    document.getElementById("overlay").style.display = "block";
-    document.getElementById("modalComp").style.display = "block";
-    if (index >= 0) {
-      const c = competencias[index];
-      document.getElementById("nombreComp").value = c.nombre;
-      document.getElementById("descComp").value = c.desc;
-      document.getElementById("tituloModalComp").innerText = "Editar Competencia";
-    } else {
-      document.getElementById("nombreComp").value = "";
-      document.getElementById("descComp").value = "";
-      document.getElementById("tituloModalComp").innerText = "Nueva Competencia";
-    }
-  }
-
-  function abrirModalResultado() {
-    document.getElementById("overlay").style.display = "block";
-    document.getElementById("modalResultado").style.display = "block";
-    const select = document.getElementById("compSeleccionadas");
-    select.innerHTML = "";
-    competencias.forEach(c => {
-      const opt = document.createElement("option");
-      opt.value = c.nombre;
-      opt.textContent = c.nombre;
-      select.appendChild(opt);
-    });
-  }
-
-  function cerrarModales() {
-    document.getElementById("overlay").style.display = "none";
-    document.getElementById("modalComp").style.display = "none";
-    document.getElementById("modalResultado").style.display = "none";
-  }
-
-  function guardarCompetencia() {
-    const nombre = document.getElementById("nombreComp").value.trim();
-    const desc = document.getElementById("descComp").value.trim();
-    const carrera = document.getElementById("carrera").value;
-    const pensum = document.getElementById("pensum").value;
-    if (!nombre || !desc || !carrera || !pensum) return alert("Todos los campos son obligatorios.");
-    const data = { nombre, desc, carrera, pensum };
-    if (editIndex >= 0) {
-      competencias[editIndex] = data;
-    } else {
-      competencias.push(data);
-    }
-    localStorage.setItem("competencias", JSON.stringify(competencias));
-    cerrarModales();
-    renderCompetencias();
-  }
-
-  
-function guardarResultado() {
-  const desc = document.getElementById("descResultado").value.trim();
-  const seleccionadas = Array.from(document.getElementById("compSeleccionadas").selectedOptions).map(o => o.value);
-  if (!desc || seleccionadas.length === 0) return alert("Complete la descripción y seleccione al menos una competencia.");
-  const data = { desc, competencias: seleccionadas, carrera: currentCarrera, pensum: currentPensum };
-  if (resultadoEditIndex >= 0) {
-    resultados[resultadoEditIndex] = data;
-    resultadoEditIndex = -1;
-  } else {
-    resultados.push(data);
-  }
-  localStorage.setItem("resultados", JSON.stringify(resultados));
-  cerrarModales();
-  renderResultados();
-}
-
-}
-
-
-  
-let resultadoEditIndex = -1;
-
-function editarResultado(index) {
-  resultadoEditIndex = index;
-  const r = resultados[index];
-  document.getElementById("descResultado").value = r.desc;
-  abrirModalResultado();
-  const select = document.getElementById("compSeleccionadas");
-  Array.from(select.options).forEach(opt => {
-    opt.selected = r.competencias.includes(opt.value);
+  competencias.forEach((c, i) => {
+    const b = document.createElement("div");
+    b.className = "badge";
+    b.textContent = i + 1;
+    div.appendChild(b);
   });
-}
-
-
-function guardarResultado() {
-  const desc = document.getElementById("descResultado").value.trim();
-  const seleccionadas = Array.from(document.getElementById("compSeleccionadas").selectedOptions).map(o => o.value);
-  if (!desc || seleccionadas.length === 0) return alert("Complete la descripción y seleccione al menos una competencia.");
-  const data = { desc, competencias: seleccionadas, carrera: currentCarrera, pensum: currentPensum };
-  if (resultadoEditIndex >= 0) {
-    resultados[resultadoEditIndex] = data;
-    resultadoEditIndex = -1;
-  } else {
-    resultados.push(data);
-  }
-  localStorage.setItem("resultados", JSON.stringify(resultados));
-  cerrarModales();
-  renderResultados();
-}
-
-}
-
-
-function renderResultados() {
-  const tbody = document.querySelector("#tablaResultados tbody");
-  tbody.innerHTML = "";
-  resultados.forEach((r, i) => {
-    if (r.carrera === currentCarrera && r.pensum === currentPensum) {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${r.desc}</td>
-        <td>${r.competencias.join(", ")}</td>
-        <td><button class="button" onclick="editarResultado(${i})">Editar</button></td>`;
-      tbody.appendChild(row);
-    }
-  });
-  if (tbody.innerHTML === "") {
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#aaa;">Sin registros</td></tr>';
-  }
-}
-
-}
-
-function ordenarTabla(n, tableId, iconPrefix) {
-  const table = document.getElementById(tableId);
-  let switching = true, dir = "asc", switchCount = 0;
-  for (let j = 0; j < table.rows[0].cells.length; j++) {
-    const icon = document.getElementById(`${iconPrefix}-${j}`);
-    if (icon) icon.textContent = "⇅";
-  }
-  while (switching) {
-    switching = false;
-    let rows = table.rows;
-    for (let i = 1; i < rows.length - 1; i++) {
-      let shouldSwitch = false;
-      let x = rows[i].getElementsByTagName("TD")[n];
-      let y = rows[i + 1].getElementsByTagName("TD")[n];
-      if (dir === "asc" && x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-        shouldSwitch = true;
-        break;
-      }
-      if (dir === "desc" && x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-        shouldSwitch = true;
-        break;
-      }
-    }
-    if (shouldSwitch) {
-      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-      switching = true;
-      switchCount++;
-    } else {
-      if (switchCount === 0 && dir === "asc") {
-        dir = "desc";
-        switching = true;
-      }
-    }
-  }
-  const icon = document.getElementById(`${iconPrefix}-${n}`);
-  if (icon) icon.textContent = dir === "asc" ? "▲" : "▼";
-}
-
-document.getElementById("carrera").addEventListener("change", loadPensum);
-window.onload = () => {
-    renderCompetencias();
-    renderResultados();
-    loadPensum();
-  };
-</script>
-
-
-<button class="button" onclick="exportarResultadosExcel()">Exportar Resultados (Excel)</button>
-<button class="button" onclick="exportarResultadosPDF()">Exportar Resultados (PDF)</button>
-</div>
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-function exportarResultadosExcel() {
-  const datos = [["Resultado", "Competencias Asociadas", "Carrera", "Pensum"]];
-  resultados.forEach(r => {
-    if (r.carrera === currentCarrera && r.pensum === currentPensum) {
-      datos.push([r.desc, r.competencias.join(", "), r.carrera, r.pensum]);
-    }
-  });
-  const ws = XLSX.utils.aoa_to_sheet(datos);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Resultados");
-  XLSX.writeFile(wb, "resultados_aprendizaje_filtrados.xlsx");
-}
-
-async function exportarResultadosPDF() {
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.setFontSize(12);
-  let y = 10;
-  resultados.forEach((r, i) => {
-    if (r.carrera === currentCarrera && r.pensum === currentPensum) {
-      doc.text(`Resultado ${i + 1}`, 10, y);
-      doc.text(`Descripción: ${r.desc}`, 10, y + 10);
-      doc.text(`Competencias: ${r.competencias.join(", ")}`, 10, y + 20);
-      doc.text(`Carrera: ${r.carrera} | Pensum: ${r.pensum}`, 10, y + 30);
-      y += 40;
-      if (y > 270) {
-        doc.addPage();
-        y = 10;
-      }
-    }
-  });
-  doc.save("resultados_aprendizaje_filtrados.pdf");
 }
 </script>
 
 
+      <div class="list" id="listaCompetencias">
+        <!-- items dinámicos -->
+      </div>
+    </aside>
 
+    <!-- PANEL DERECHO: EDITOR / CREACIÓN WIZARD -->
+    <section class="editor">
+      <h3 id="editorTitle">Crear nueva competencia</h3>
+
+      <div id="crearArea">
+        <label>Nombre (se autogenera pero puedes editar):</label>
+        <input type="text" id="inputNombre" placeholder="Competencia 1" />
+
+        <label>Descripción:</label>
+        <textarea id="inputDesc" placeholder="Escribe la descripción de la competencia..."></textarea>
+
+        <div class="muted small">
+          Al crear la competencia debes añadir entre 1 y 4 Resultados de Aprendizaje (RA). Solo cuando agregues al menos 1 RA y pulses <strong>Finalizar Competencia</strong> se liberará la opción de crear la siguiente competencia.
+        </div>
+
+        <hr style="margin:14px 0; border:none; border-top:1px solid #f0f0f0;" />
+
+        <label>Agregar Resultado de Aprendizaje (RA)</label>
+
+        <div style="display:flex; gap:8px; align-items:flex-start;">
+          <div style="flex:1">
+            <input type="text" id="raText" placeholder="Descripción del RA..." />
+          </div>
+          <div style="width:180px;">
+            <button id="btnAddRA">Añadir RA</button>
+          </div>
+        </div>
+
+        <div class="ra-list" id="raList"></div>
+
+        <div class="actions-row">
+          <button id="btnFinalizar" class="ghost" style="background:var(--accent); color:#fff;">Finalizar Competencia</button>
+          <button id="btnCancelar" class="secondary">Cancelar creación</button>
+          <div style="flex:1"></div>
+          <div class="small" id="statusMsg"></div>
+        </div>
+      </div>
+
+      <div id="editarArea" style="display:none;">
+        <!-- Area que aparece al editar una competencia ya guardada -->
+        <h4>Editar competencia</h4>
+        <label>Nombre:</label>
+        <input type="text" id="editNombre" />
+        <label>Descripción:</label>
+        <textarea id="editDesc"></textarea>
+
+        <label>Resultados de Aprendizaje (RAs)</label>
+        <div class="ra-list" id="editRaList"></div>
+
+        <div class="actions-row">
+          <button id="btnGuardarEdit">Guardar cambios</button>
+          <button id="btnEliminar" style="background:var(--danger);">Eliminar competencia</button>
+          <button id="btnVolver" class="secondary">Volver</button>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <!-- <footer>
+    <div><strong>Tipos disponibles:</strong> I (Introduce) · R (Refuerza) · A (Afianza) · NA (No Aplica)</div>
+    <div style="margin-top:8px; color:#999;">Los datos se guardan automáticamente en el navegador (localStorage).</div>
+  </footer> -->
+</div>
+
+<!-- librerías para export (CDN) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <script>
-const pensums = {
-  "Ingeniería Multimedia": ["Plan de estudios 2015-2", "Plan de estudios 2023-1"],
-  "Futbol": ["Plan de estudios 2024-1"]
-};
+/*
+  Modelo de datos (guardado en localStorage bajo 'competencias_v2'):
+  competencias = [
+    { id:1, nombre:"Competencia 1", desc:"...", ra:[ {id:1, nombre:"RA 1", desc:"..."}, ... ] }
+  ]
+*/
 
-let competencias = JSON.parse(localStorage.getItem("competencias")) || [];
-let resultados = JSON.parse(localStorage.getItem("resultados")) || [];
-let currentCarrera = "";
-let currentPensum = "";
-let editIndex = -1;
-let resultadoEditIndex = -1;
+const STORAGE_KEY = "competencias_v2";
+let competencias = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
-function loadPensum() {
-  const carrera = document.getElementById("carrera").value;
-  const pensumSelect = document.getElementById("pensum");
-  pensumSelect.innerHTML = '<option value="">Seleccione un plan de estudios</option>';
-  if (pensums[carrera]) {
-    pensums[carrera].forEach(p => {
-      const opt = document.createElement("option");
-      opt.value = p;
-      opt.textContent = p;
-      pensumSelect.appendChild(opt);
-    });
-  }
-  currentCarrera = carrera;
-  currentPensum = "";
-  renderCompetencias(); renderResultados();
+// UI refs
+const listaCompetencias = document.getElementById("listaCompetencias");
+const inputNombre = document.getElementById("inputNombre");
+const inputDesc = document.getElementById("inputDesc");
+const btnNuevo = document.getElementById("btnNuevo");
+const btnAddRA = document.getElementById("btnAddRA");
+const raText = document.getElementById("raText");
+const raList = document.getElementById("raList");
+const btnFinalizar = document.getElementById("btnFinalizar");
+const btnCancelar = document.getElementById("btnCancelar");
+const statusMsg = document.getElementById("statusMsg");
+
+const editorTitle = document.getElementById("editorTitle");
+const editarArea = document.getElementById("editarArea");
+const crearArea = document.getElementById("crearArea");
+
+// edit area refs
+const editNombre = document.getElementById("editNombre");
+const editDesc = document.getElementById("editDesc");
+const editRaList = document.getElementById("editRaList");
+const btnGuardarEdit = document.getElementById("btnGuardarEdit");
+const btnEliminar = document.getElementById("btnEliminar");
+const btnVolver = document.getElementById("btnVolver");
+
+// export buttons
+const btnExportExcel = document.getElementById("btnExportExcel");
+const btnExportPDF = document.getElementById("btnExportPDF");
+
+// estado de creación actual (en memoria hasta confirmar)
+let creating = false;
+let creatingCompetencia = null; // {id, nombre, desc, ra:[]}
+let editingIndex = -1;
+
+// helpers
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(competencias));
 }
 
-document.getElementById("pensum").addEventListener("change", () => {
-  currentPensum = document.getElementById("pensum").value;
-  renderCompetencias(); renderResultados();
-  renderCompetencias(); renderResultados();
+function nextCompetenciaIndex() {
+  // busca el mayor id y suma 1, si no hay -> 1
+  if (!competencias.length) return 1;
+  const ids = competencias.map(c=>c.id || 0);
+  return Math.max(...ids) + 1;
+}
+
+function nextRAIndexForComp(comp) {
+  if (!comp.ra || !comp.ra.length) return 1;
+  const ids = comp.ra.map(r => r.id || 0);
+  return Math.max(...ids) + 1;
+}
+
+function renderList() {
+  listaCompetencias.innerHTML = "";
+  if (!competencias.length) {
+    listaCompetencias.innerHTML = '<div style="color:#999; text-align:center; padding:16px;">No hay competencias. Crea la primera.</div>';
+    return;
+  }
+  competencias.forEach((c, idx) => {
+    const div = document.createElement("div");
+    div.className = "comp-item";
+    div.innerHTML = `
+      <div class="comp-meta">
+        <div class="comp-title">${c.nombre}</div>
+        <div class="comp-desc">${c.desc}</div>
+        <div class="small" style="margin-top:8px;">RAs: ${c.ra.length} · ID: ${c.id}</div>
+      </div>
+      <div style="display:flex;flex-direction:column; gap:6px;">
+        <button class="ghost" onclick="editarCompetencia(${idx})">Editar</button>
+        <button class="secondary" onclick="duplicarCompetencia(${idx})">Duplicar</button>
+      </div>
+    `;
+    listaCompetencias.appendChild(div);
+  });
+}
+
+// iniciar creación
+btnNuevo.addEventListener("click", () => {
+  if (creating) {
+    alert("Estás en medio de crear una competencia. Finaliza o cancela antes de crear otra.");
+    return;
+  }
+  creating = true;
+  creatingCompetencia = {
+    id: nextCompetenciaIndex(),
+    nombre: `Competencia ${nextCompetenciaIndex()}`,
+    desc: "",
+    ra: []
+  };
+  // poner datos en inputs
+  inputNombre.value = creatingCompetencia.nombre;
+  inputDesc.value = "";
+  raList.innerHTML = "";
+  raText.value = "";
+  statusMsg.textContent = `Creando ${creatingCompetencia.nombre}. Agrega RAs (1-4).`;
+  editorTitle.textContent = `Creando: ${creatingCompetencia.nombre}`;
+  crearArea.style.display = "";
+  editarArea.style.display = "none";
+  // focus
+  inputDesc.focus();
 });
 
-function abrirModalComp(index = -1) {
-  editIndex = index;
-  document.getElementById("overlay").style.display = "block";
-  document.getElementById("modalComp").style.display = "block";
-  if (index >= 0) {
-    const c = competencias[index];
-    document.getElementById("nombreComp").value = c.nombre;
-    document.getElementById("descComp").value = c.desc;
-    document.getElementById("tituloModalComp").innerText = "Editar Competencia";
-  } else {
-    document.getElementById("nombreComp").value = "";
-    document.getElementById("descComp").value = "";
-    document.getElementById("tituloModalComp").innerText = "Nueva Competencia";
-  }
+// agregar RA
+btnAddRA.addEventListener("click", () => {
+  if (!creating) return alert("Primero inicia la creación de una competencia con 'Agregar Competencia'.");
+  const text = raText.value.trim();
+  if (!text) return alert("Ingresa la descripción del RA.");
+  if (creatingCompetencia.ra.length >= 4) return alert("Máximo 4 RA por competencia.");
+  const nextId = nextRAIndexForComp(creatingCompetencia);
+  const ra = { id: nextId, nombre: `RA ${nextId}`, desc: text };
+  creatingCompetencia.ra.push(ra);
+  raText.value = "";
+  renderCreatingRAs();
+  statusMsg.textContent = `RA añadida (${creatingCompetencia.ra.length}/4). Puedes añadir más o Finalizar.`;
+});
+
+// render RAs en creación
+function renderCreatingRAs(){
+  raList.innerHTML = "";
+  creatingCompetencia.ra.forEach((r, i) => {
+    const div = document.createElement("div");
+    div.className = "ra-item";
+    div.innerHTML = `
+      <div class="ra-left">
+        <div style="font-weight:700;">${r.nombre}</div>
+        <div class="small" style="margin-top:6px;">${escapeHtml(r.desc)}</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="ghost" onclick="editarRA_creacion(${i})">Editar</button>
+        <button class="secondary" onclick="borrarRA_creacion(${i})">Eliminar</button>
+      </div>
+    `;
+    raList.appendChild(div);
+  });
 }
 
-function abrirModalResultado() {
-  document.getElementById("overlay").style.display = "block";
-  document.getElementById("modalResultado").style.display = "block";
-  const select = document.getElementById("compSeleccionadas");
-  select.innerHTML = "";
+// editar RA en creación
+function editarRA_creacion(index){
+  const r = creatingCompetencia.ra[index];
+  const nuevo = prompt(`Editar ${r.nombre}`, r.desc);
+  if (nuevo === null) return;
+  const texto = nuevo.trim();
+  if (!texto) return alert("Descripción vacía no permitida.");
+  creatingCompetencia.ra[index].desc = texto;
+  renderCreatingRAs();
+}
+
+// borrar RA en creación
+function borrarRA_creacion(index){
+  if (!confirm("Eliminar este RA?")) return;
+  creatingCompetencia.ra.splice(index,1);
+  renderCreatingRAs();
+  statusMsg.textContent = `RA eliminada. ${creatingCompetencia.ra.length}/4.`;
+}
+
+// Finalizar competencia: validar que tenga >=1 RA
+btnFinalizar.addEventListener("click", () => {
+  if (!creating) return alert("No hay creación en curso.");
+  const nombre = inputNombre.value.trim();
+  const desc = inputDesc.value.trim();
+  if (!nombre || !desc) return alert("Nombre y descripción de la competencia son obligatorios.");
+  if (!creatingCompetencia.ra.length) return alert("Agrega al menos 1 RA antes de finalizar.");
+  // asignar valores finales
+  creatingCompetencia.nombre = nombre;
+  creatingCompetencia.desc = desc;
+  // push a lista
+  competencias.push(JSON.parse(JSON.stringify(creatingCompetencia)));
+  save();
+  crearAreaReset();
+  renderList();
+  creating = false;
+  creatingCompetencia = null;
+  editorTitle.textContent = "Crear nueva competencia";
+  statusMsg.textContent = "Competencia finalizada y guardada.";
+});
+
+// cancelar creación
+btnCancelar.addEventListener("click", () => {
+  if (!creating) {
+    inputNombre.value = "";
+    inputDesc.value = "";
+    raText.value = "";
+    raList.innerHTML = "";
+    return;
+  }
+  if (!confirm("Cancelar creación actual? Los RAs agregados se perderán.")) return;
+  crearAreaReset();
+  creating = false;
+  creatingCompetencia = null;
+  statusMsg.textContent = "Creación cancelada.";
+});
+
+function crearAreaReset(){
+  inputNombre.value = "";
+  inputDesc.value = "";
+  raList.innerHTML = "";
+  raText.value = "";
+}
+
+/* --- editar competencias ya guardadas --- */
+function editarCompetencia(index){
+  editingIndex = index;
+  const c = competencias[index];
+  editNombre.value = c.nombre;
+  editDesc.value = c.desc;
+  renderEditRAs();
+  crearArea.style.display = "none";
+  editarArea.style.display = "";
+  editorTitle.textContent = `Editar: ${c.nombre}`;
+}
+
+function renderEditRAs(){
+  editRaList.innerHTML = "";
+  const c = competencias[editingIndex];
+  c.ra.forEach((r, idx) => {
+    const div = document.createElement("div");
+    div.className = "ra-item";
+    div.innerHTML = `
+      <div style="flex:1">
+        <div style="font-weight:700;">${r.nombre}</div>
+        <div class="small" style="margin-top:6px;">${escapeHtml(r.desc)}</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <button class="ghost" onclick="editarRA(${idx})">Editar</button>
+        <button class="secondary" onclick="borrarRA(${idx})">Eliminar</button>
+      </div>
+    `;
+    editRaList.appendChild(div);
+  });
+}
+
+function editarRA(idx){
+  const c = competencias[editingIndex];
+  const r = c.ra[idx];
+  const nuevo = prompt(`Editar ${r.nombre}`, r.desc);
+  if (nuevo === null) return;
+  const txt = nuevo.trim();
+  if (!txt) return alert("Descripción vacía no permitida.");
+  c.ra[idx].desc = txt;
+  save();
+  renderEditRAs();
+  renderList();
+}
+
+function borrarRA(idx){
+  if (!confirm("Eliminar RA?")) return;
+  competencias[editingIndex].ra.splice(idx,1);
+  save();
+  renderEditRAs();
+  renderList();
+}
+
+btnGuardarEdit.addEventListener("click", () => {
+  const nombre = editNombre.value.trim();
+  const desc = editDesc.value.trim();
+  if (!nombre || !desc) return alert("Nombre y descripción son obligatorios.");
+  competencias[editingIndex].nombre = nombre;
+  competencias[editingIndex].desc = desc;
+  save();
+  editarArea.style.display = "none";
+  crearArea.style.display = "";
+  editingIndex = -1;
+  renderList();
+  editorTitle.textContent = "Crear nueva competencia";
+});
+
+btnEliminar.addEventListener("click", () => {
+  if (!confirm("Eliminar esta competencia y todos sus RAs?")) return;
+  competencias.splice(editingIndex,1);
+  save();
+  editingIndex = -1;
+  editarArea.style.display = "none";
+  crearArea.style.display = "";
+  renderList();
+  editorTitle.textContent = "Crear nueva competencia";
+});
+
+btnVolver.addEventListener("click", () => {
+  editingIndex = -1;
+  editarArea.style.display = "none";
+  crearArea.style.display = "";
+  editorTitle.textContent = "Crear nueva competencia";
+});
+
+/* duplicar competencia */
+function duplicarCompetencia(index){
+  const original = competencias[index];
+  const copy = JSON.parse(JSON.stringify(original));
+  copy.id = nextCompetenciaIndex();
+  copy.nombre = `Competencia ${copy.id}`;
+  // reasignar ids de RA
+  copy.ra = copy.ra.map((r,i)=>({ id:i+1, nombre:`RA ${i+1}`, desc:r.desc }));
+  competencias.push(copy);
+  save();
+  renderList();
+  alert("Competencia duplicada con nuevo ID.");
+}
+
+/* --- Exportar Excel y PDF --- */
+btnExportExcel.addEventListener("click", exportExcel);
+btnExportPDF.addEventListener("click", exportPDF);
+
+function exportExcel(){
+  if (!competencias.length) return alert("No hay competencias para exportar.");
+  const rows = [];
+  rows.push(["ID Competencia","Nombre Competencia","Descripción Competencia","ID RA","Nombre RA","Descripción RA"]);
   competencias.forEach(c => {
-    if (c.carrera === currentCarrera && c.pensum === currentPensum) {
-      const opt = document.createElement("option");
-      opt.value = c.nombre;
-      opt.textContent = c.nombre;
-      select.appendChild(opt);
+    if (!c.ra.length) {
+      rows.push([c.id, c.nombre, c.desc, "", "", ""]);
+    } else {
+      c.ra.forEach(r => {
+        rows.push([c.id, c.nombre, c.desc, r.id, r.nombre, r.desc]);
+      });
     }
   });
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Competencias");
+  XLSX.writeFile(wb, "competencias_export.xlsx");
 }
 
-function cerrarModales() {
-  document.getElementById("overlay").style.display = "none";
-  document.getElementById("modalComp").style.display = "none";
-  document.getElementById("modalResultado").style.display = "none";
-}
+async function exportPDF(){
+  if (!competencias.length) return alert("No hay competencias para exportar.");
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit:"pt", format:"a4" });
+  const pageWidth = doc.internal.pageSize.getWidth();
+  let y = 40;
+  doc.setFontSize(16);
+  doc.setTextColor(40,40,40);
+  doc.text("Export: Competencias y RAs", pageWidth/2, y, { align:"center" });
+  y += 30;
+  doc.setFontSize(11);
 
-function guardarCompetencia() {
-  const nombre = document.getElementById("nombreComp").value.trim();
-  const desc = document.getElementById("descComp").value.trim();
-  if (!nombre || !desc || !currentCarrera || !currentPensum) return alert("Todos los campos son obligatorios.");
-  const data = { nombre, desc, carrera: currentCarrera, pensum: currentPensum };
-  if (editIndex >= 0) {
-    competencias[editIndex] = data;
-  } else {
-    competencias.push(data);
-  }
-  localStorage.setItem("competencias", JSON.stringify(competencias));
-  cerrarModales();
-  renderCompetencias();
-}
-
-function guardarResultado() {
-  const desc = document.getElementById("descResultado").value.trim();
-  const seleccionadas = Array.from(document.getElementById("compSeleccionadas").selectedOptions).map(o => o.value);
-  if (!desc || seleccionadas.length === 0) return alert("Complete la descripción y seleccione al menos una competencia.");
-  const data = { desc, competencias: seleccionadas, carrera: currentCarrera, pensum: currentPensum };
-  if (resultadoEditIndex >= 0) {
-    resultados[resultadoEditIndex] = data;
-    resultadoEditIndex = -1;
-  } else {
-    resultados.push(data);
-  }
-  localStorage.setItem("resultados", JSON.stringify(resultados));
-  cerrarModales();
-  renderResultados();
-}
-
-function editarResultado(index) {
-  resultadoEditIndex = index;
-  const r = resultados[index];
-  if (r.carrera !== currentCarrera || r.pensum !== currentPensum) return;
-  document.getElementById("descResultado").value = r.desc;
-  abrirModalResultado();
-  const select = document.getElementById("compSeleccionadas");
-  Array.from(select.options).forEach(opt => {
-    opt.selected = r.competencias.includes(opt.value);
-  });
-}
-
-function renderCompetencias() {
-  const tbody = document.querySelector("#tablaCompetencias tbody");
-  tbody.innerHTML = "";
-  competencias.forEach((c, i) => {
-    if (c.carrera === currentCarrera && c.pensum === currentPensum) {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${c.nombre}</td>
-        <td>${c.desc}</td>
-        <td>${c.carrera}</td>
-        <td>${c.pensum}</td>
-        <td><button class="button" onclick="abrirModalComp(${i})">Editar</button></td>`;
-      tbody.appendChild(row);
+  competencias.forEach((c, idx) => {
+    doc.setFont(undefined, "bold");
+    doc.text(`Competencia ${c.id}: ${c.nombre}`, 40, y);
+    y += 14;
+    doc.setFont(undefined, "normal");
+    // descripción (wrap)
+    const splitDesc = doc.splitTextToSize(`Descripción: ${c.desc}`, pageWidth - 80);
+    doc.text(splitDesc, 40, y);
+    y += (splitDesc.length * 12) + 6;
+    if (c.ra.length) {
+      c.ra.forEach(r => {
+        doc.setFont(undefined, "italic");
+        const raLine = `${r.nombre}: ${r.desc}`;
+        const splitRa = doc.splitTextToSize(raLine, pageWidth - 100);
+        doc.text(splitRa, 60, y);
+        y += (splitRa.length * 12) + 6;
+      });
+    } else {
+      doc.text("(Sin RAs)", 60, y);
+      y += 14;
+    }
+    y += 8;
+    if (y > 740) {
+      doc.addPage();
+      y = 40;
     }
   });
-  if (tbody.innerHTML === "") {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#aaa;">Sin registros</td></tr>';
-  }
+
+  doc.save("competencias_export.pdf");
 }
 
-function renderResultados() {
-  const tbody = document.querySelector("#tablaResultados tbody");
-  tbody.innerHTML = "";
-  resultados.forEach((r, i) => {
-    if (r.carrera === currentCarrera && r.pensum === currentPensum) {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${r.desc}</td>
-        <td>${r.competencias.join(", ")}</td>
-        <td><button class="button" onclick="editarResultado(${i})">Editar</button></td>`;
-      tbody.appendChild(row);
-    }
-  });
-  if (tbody.innerHTML === "") {
-    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#aaa;">Sin registros</td></tr>';
-  }
+/* util */
+function escapeHtml(s){
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 
-window.onload = () => {
-  renderCompetencias();
-  renderResultados();
-};
+/* inicializar */
+renderList();
+
+
+function filtrarPrograma() {
+  const carrera = document.getElementById("carrera").value;
+  const plan = document.getElementById("planEstudio").value;
+
+  if (!carrera || !plan) {
+    renderList();
+    return;
+  }
+
+  // Aquí podrás crear reglas específicas si quieres filtrar competencias por plan/carrera.
+  renderList();
+}
+
 </script>
 </body>
 </html>
