@@ -190,7 +190,7 @@ function mostrarTablaSemestre(n) {
   const semKey = "Semestre " + n;
 
   if (!pensum[semKey]) {
-    cont.innerHTML = "<p>No hay materias para este semestre.</p>";
+    cont.innerHTML = "<p>No hay cursos para este semestre.</p>";
     return;
   }
 
@@ -200,7 +200,7 @@ function mostrarTablaSemestre(n) {
     <table>
       <thead>
         <tr>
-          <th>Materia</th>
+          <th>Cursos</th>
           <th>C1</th>
           <th>C2</th>
           <th>C3</th>
