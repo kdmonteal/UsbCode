@@ -296,7 +296,7 @@
                 return;
             }
 
-            if (nivel === "sobresaliente" || nivel === "satisfactorio" || nivel === "desarrollo") {
+            if (nivel === "sobresaliente" || nivel === "satisfactorio") {
                 estadoTd.textContent = "Aprobado";
                 estadoTd.className = "estado estado-aprobado";
             } else {
@@ -317,7 +317,7 @@
                 const nivel = select.value;
                 if (nivel) {
                     totalEvaluados++;
-                    if (nivel === "sobresaliente" || nivel === "satisfactorio" || nivel === "desarrollo") {
+                    if (nivel === "sobresaliente" || nivel === "satisfactorio") {
                         aprobados++;
                     } else {
                         noAprobados++;
