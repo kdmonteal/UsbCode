@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Creación de Ciclo</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 2rem;
+    background: white;
+  }
+
+  h1 {
+    color: #ff9900;
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+
+  .layout {
+    display: flex;
+    justify-content: space-between;
+    gap: 2rem;
+    align-items: flex-start;
+  }
+
+  /* PANEL IZQUIERDO */
+  .contenedor {
+    flex: 1;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+  }
+
+  label {
+    display: block;
+    margin-top: 1rem;
+    font-weight: bold;
+  }
+
+  input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+  }
+
+ #listaCursos {
+  margin-top: 1rem;
+  background: white;
+  padding: 1rem;
+  border-radius: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  text-align: left !important;
+  display: block !important;
+}
+
+.curso-item {
+  /* display: flex !important;
+  flex-direction: row !important; 
+  justify-content: flex-!important;
+  align-items: center !important; */
+  gap: 8px !important;
+  margin-bottom: 20px;
+  padding-left: 2px;
+}
+
+.curso-item label {
+  text-align: left !important;
+  width: auto !important;
+  display: inline-block !important;
+}
+
+
+  .btn {
+    margin-top: 1.5rem;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    background: #ff9900;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .btn-secondary {
+    background: #ccc;
+    color: black;
+    margin-left: 1rem;
+  }
+
+  /* PANEL DERECHO: MODELO DE MEDICIÓN */
+  .modelo-medicion {
+    width: 35%;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    background: white;
+  }
+</style>
+
+</head>
+<body>
+
+<h1>Creación de Ciclo</h1>
+
+<div class="layout">
+
+  <!-- IZQUIERDA: CREACIÓN -->
+  <div class="contenedor">
+
+    <label>Nombre del ciclo:</label>
+    <input id="nombreCiclo" placeholder="Ej: Ciclo de profundización">
+
+    <label>Duración del ciclo:</label>
+    <input value="1.5 años" disabled>
+
+    <label>Cursos a medir:</label>
+    <small>(Se muestran solo cursos desde 7mo semestre en adelante)</small>
+
+    <div id="listaCursos">
+      Cargando cursos...
+    </div>
+
+    <button class="btn" onclick="guardarCiclo()">Guardar Ciclo</button>
+    <button class="btn btn-secondary" onclick="window.history.back()">Volver</button>
+
+  </div>
+
+  <!-- DERECHA: MODELO DE MEDICIÓN -->
+  <div class="modelo-medicion">
+
+    <h2 style="color:#ff9900; text-align:center; margin-bottom:1rem;">
+      Modelo de Medición
+    </h2>
+
+    <!-- Línea de formación -->
+    <div style="display:flex; justify-content:space-between; margin-bottom:1.8rem;">
+
+      <div style="flex:1; text-align:center;">
+        <h3 style="color:#1f7a1f; margin:0;">Fundamentación</h3>
+        <p style="margin:0;">1°, 2°, 3° semestre</p>
+        <small>Introduce / Refuerza</small>
+      </div>
+
+      <div style="flex:1; text-align:center;">
+        <h3 style="color:#1fa57a; margin:0;">Profesionalización</h3>
+        <p style="margin:0;">4°, 5°, 6° semestre</p>
+        <small>Refuerza / Afianza</small>
+      </div>
+
+      <div style="flex:1; text-align:center;">
+        <h3 style="color:#c1497d; margin:0;">Síntesis</h3>
+        <p style="margin:0;">7° semestre en adelante</p>
+        <small>Medición Sumativa</small>
+      </div>
+
+    </div>
+
+    <!-- Ciclo -->
+    <div style="text-align:center; font-size:1rem; font-weight:bold; margin-bottom:2rem;">
+      Ciclo de 1.5 Años<br>
+      Medición • Evaluación • Mejoramiento
+    </div>
+
+    <!-- Ruta de mejora -->
+    <div style="display:flex; justify-content:space-around; margin-bottom:2rem;">
+      <div><strong>Mejoramiento</strong></div>
+      <div><strong>Plan de mejora</strong></div>
+      <div>
+        <strong>Estrategias de mejora</strong><br>
+        <small>(Saber Pro, Encuesta de salida)</small>
+      </div>
+    </div>
+
+    <!-- Proceso -->
+    <h3 style="color:#ff9900; margin-bottom:0.5rem;">Proceso de Medición</h3>
+
+    <ol style="line-height:1.5;">
+      <li><strong>Mapeo de competencias:</strong> seleccionar competencia y asignar nivel (I, R, A).</li>
+      <li><strong>Seleccionar cursos sumativos</strong> (Núcleo de Síntesis).</li>
+      <li><strong>Asignar RA</strong> a las competencias de esos cursos.</li>
+      <li><strong>Medición del RA:</strong> instrumento de evidencia + categoría:
+        <ul>
+          <li>Sobresaliente</li>
+          <li>Satisfactorio</li>
+          <li>En desarrollo</li>
+          <li>Deficiente</li>
+        </ul>
+      </li>
+      <li><strong>Análisis de resultados y propuestas de mejora.</strong></li>
+      <li><strong>Plan de mejoramiento.</strong></li>
+      <li><strong>Ejecución.</strong></li>
+      <li><strong>Seguimiento</strong> con medición formativa.</li>
+    </ol>
+
+  </div>
+
+</div>
+
+<script>
+let pensum = {};
+let ciclos = JSON.parse(localStorage.getItem("ciclosMICA") || "[]");
+
+// Cargar pensum
+fetch("pensum_academico.json")
+  .then(r => r.json())
+  .then(data => {
+    pensum = data;
+    cargarCursos();
+  });
+
+// Mostrar solo cursos del 7 y 8 semestre
+// Mostrar cursos del 7 y 8 semestre
+function cargarCursos() {
+  const cont = document.getElementById("listaCursos");
+  cont.innerHTML = "";
+
+  const semestresObjetivo = ["Semestre 7", "Semestre 8"];
+
+  semestresObjetivo.forEach(sem => {
+    if (pensum[sem]) {
+      pensum[sem].forEach(curso => {
+        const id = "curso_" + curso.nombre.replace(/\s+/g, "_");
+
+        cont.innerHTML += `
+          <div class="curso-item">
+            <input type="checkbox" id="${id}" value="${curso.nombre}">
+            <label for="${id}">${curso.nombre}</label>
+          </div>
+
+        `;
+      });
+    }
+  });
+}
+
+// Guardar ciclo
+function guardarCiclo() {
+  const nombre = document.getElementById("nombreCiclo").value.trim();
+  if (!nombre) {
+    alert("Debes escribir un nombre para el ciclo.");
+    return;
+  }
+
+  const cursosSeleccionados = [];
+  document.querySelectorAll("#listaCursos input[type='checkbox']:checked")
+    .forEach(c => cursosSeleccionados.push(c.value));
+
+  if (cursosSeleccionados.length === 0) {
+    alert("Debes seleccionar al menos un curso.");
+    return;
+  }
+
+  ciclos.push({
+    nombre,
+    duracion: "1.5 años",
+    cursos: cursosSeleccionados
+  });
+
+  localStorage.setItem("ciclosMICA", JSON.stringify(ciclos));
+
+  alert("Ciclo creado exitosamente.");
+  window.location.reload();
+}
+</script>
+
+</body>
+</html>
