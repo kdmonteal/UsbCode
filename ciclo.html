@@ -131,77 +131,6 @@
 
   </div>
 
-  <!-- DERECHA: MODELO DE MEDICIÓN -->
-  <div class="modelo-medicion">
-
-    <h2 style="color:#ff9900; text-align:center; margin-bottom:1rem;">
-      Modelo de Medición
-    </h2>
-
-    <!-- Línea de formación -->
-    <div style="display:flex; justify-content:space-between; margin-bottom:1.8rem;">
-
-      <div style="flex:1; text-align:center;">
-        <h3 style="color:#1f7a1f; margin:0;">Fundamentación</h3>
-        <p style="margin:0;">1°, 2°, 3° semestre</p>
-        <small>Introduce / Refuerza</small>
-      </div>
-
-      <div style="flex:1; text-align:center;">
-        <h3 style="color:#1fa57a; margin:0;">Profesionalización</h3>
-        <p style="margin:0;">4°, 5°, 6° semestre</p>
-        <small>Refuerza / Afianza</small>
-      </div>
-
-      <div style="flex:1; text-align:center;">
-        <h3 style="color:#c1497d; margin:0;">Síntesis</h3>
-        <p style="margin:0;">7° semestre en adelante</p>
-        <small>Medición Sumativa</small>
-      </div>
-
-    </div>
-
-    <!-- Ciclo -->
-    <div style="text-align:center; font-size:1rem; font-weight:bold; margin-bottom:2rem;">
-      Ciclo de 1.5 Años<br>
-      Medición • Evaluación • Mejoramiento
-    </div>
-
-    <!-- Ruta de mejora -->
-    <div style="display:flex; justify-content:space-around; margin-bottom:2rem;">
-      <div><strong>Mejoramiento</strong></div>
-      <div><strong>Plan de mejora</strong></div>
-      <div>
-        <strong>Estrategias de mejora</strong><br>
-        <small>(Saber Pro, Encuesta de salida)</small>
-      </div>
-    </div>
-
-    <!-- Proceso -->
-    <h3 style="color:#ff9900; margin-bottom:0.5rem;">Proceso de Medición</h3>
-
-    <ol style="line-height:1.5;">
-      <li><strong>Mapeo de competencias:</strong> seleccionar competencia y asignar nivel (I, R, A).</li>
-      <li><strong>Seleccionar cursos sumativos</strong> (Núcleo de Síntesis).</li>
-      <li><strong>Asignar RA</strong> a las competencias de esos cursos.</li>
-      <li><strong>Medición del RA:</strong> instrumento de evidencia + categoría:
-        <ul>
-          <li>Sobresaliente</li>
-          <li>Satisfactorio</li>
-          <li>En desarrollo</li>
-          <li>Deficiente</li>
-        </ul>
-      </li>
-      <li><strong>Análisis de resultados y propuestas de mejora.</strong></li>
-      <li><strong>Plan de mejoramiento.</strong></li>
-      <li><strong>Ejecución.</strong></li>
-      <li><strong>Seguimiento</strong> con medición formativa.</li>
-    </ol>
-
-  </div>
-
-</div>
-
 <script>
 let pensum = {};
 let ciclos = JSON.parse(localStorage.getItem("ciclosMICA") || "[]");
@@ -228,10 +157,14 @@ function cargarCursos() {
         const id = "curso_" + curso.nombre.replace(/\s+/g, "_");
 
         cont.innerHTML += `
-          <div class="curso-item">
-            <input type="checkbox" id="${id}" value="${curso.nombre}">
-            <label for="${id}">${curso.nombre}</label>
-          </div>
+        <div class="curso-item">
+          <table>
+            <tr>
+              <th><label for="${id}">${curso.nombre}</label></th>
+              <th><input type="checkbox" id="${id}" value="${curso.nombre}"></th>
+            </tr>
+          </table>
+        </div>
 
         `;
       });
